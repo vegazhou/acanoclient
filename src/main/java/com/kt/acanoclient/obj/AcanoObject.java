@@ -24,9 +24,10 @@ import java.util.Map;
  */
 public abstract class AcanoObject {
 
-    public abstract String getNewObjectPath();
+    @ID
+    protected String id;
 
-    public abstract String getId();
+    public abstract String getNewObjectPath();
 
     public abstract void parseBody(Node bodyNode);
 
@@ -134,5 +135,14 @@ public abstract class AcanoObject {
 
     private boolean transformToBoolean(String v) {
         return Boolean.valueOf(v);
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

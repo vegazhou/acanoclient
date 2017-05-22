@@ -140,16 +140,29 @@ public class StandardAcanoClient implements AcanoClient {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
             post.setEntity(entity);
             HttpResponse httpResponse = client.execute(post);
-            if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new AcanoApiException(EntityUtils.toString(httpResponse.getEntity()));
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                throw new AcanoApiException(statusCode, EntityUtils.toString(httpResponse.getEntity()));
             }
             return extractIdFromResponse(httpResponse);
         } catch (UnsupportedEncodingException ignore) {
         } catch (IOException e) {
             e.printStackTrace();
-            throw new AcanoApiException(e);
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
         }
         return null;
+    }
+
+
+    public <T extends AcanoObject> T getAcanoObject(String id, Class<T> clazz) throws AcanoApiException {
+        try {
+            T t = clazz.newInstance();
+            t.setId(id);
+            return getAcanoObject(t);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
+        }
     }
 
 
@@ -158,15 +171,16 @@ public class StandardAcanoClient implements AcanoClient {
         get.setConfig(buildDefaultRequestConfig());
         try {
             HttpResponse response = client.execute(get);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new AcanoApiException(EntityUtils.toString(response.getEntity()));
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                throw new AcanoApiException(statusCode, EntityUtils.toString(response.getEntity()));
             }
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
             return parseXmlAsObject(object, xml);
         } catch (IOException | DocumentException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
-            throw new AcanoApiException(e);
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
         }
     }
 
@@ -178,12 +192,13 @@ public class StandardAcanoClient implements AcanoClient {
         put.setEntity(new StringEntity(putBody, ContentType.APPLICATION_FORM_URLENCODED));
         try {
             HttpResponse response = client.execute(put);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new AcanoApiException(EntityUtils.toString(response.getEntity()));
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                throw new AcanoApiException(statusCode, EntityUtils.toString(response.getEntity()));
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new AcanoApiException(e);
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
         }
     }
 
@@ -192,13 +207,14 @@ public class StandardAcanoClient implements AcanoClient {
         HttpDelete delete = new HttpDelete(buildEndPoint() + object.getNewObjectPath() + "/" + object.getId());
         delete.setConfig(buildDefaultRequestConfig());
         try {
-            HttpResponse httpResponse = client.execute(delete);
-            if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new AcanoApiException(EntityUtils.toString(httpResponse.getEntity()));
+            HttpResponse response = client.execute(delete);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                throw new AcanoApiException(statusCode, EntityUtils.toString(response.getEntity()));
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new AcanoApiException(e);
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
         }
     }
 
@@ -213,7 +229,7 @@ public class StandardAcanoClient implements AcanoClient {
 
             HttpResponse response = client.execute(get);
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new AcanoApiException(EntityUtils.toString(response.getEntity()));
+                throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
             }
             AcanoType at = clazz.getAnnotation(AcanoType.class);
             if (at == null) {
@@ -225,7 +241,7 @@ public class StandardAcanoClient implements AcanoClient {
             }
         } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
             e.printStackTrace();
-            throw new AcanoApiException(e);
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
         }
     }
 
