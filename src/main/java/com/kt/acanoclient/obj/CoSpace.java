@@ -29,6 +29,11 @@ public class CoSpace extends AcanoObject {
         callId = readTextValue(bodyNode.selectSingleNode("callId"));
     }
 
+    @Override
+    public String getNewObjectPath() {
+        return "/coSpaces";
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -63,11 +68,5 @@ public class CoSpace extends AcanoObject {
 
     public void setDefaultLayout(String defaultLayout) {
         this.defaultLayout = defaultLayout;
-    }
-
-
-    @Override
-    public String getNewObjectPath() {
-        return "/coSpaces";
     }
 }

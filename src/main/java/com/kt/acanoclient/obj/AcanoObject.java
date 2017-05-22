@@ -104,12 +104,35 @@ public abstract class AcanoObject {
         return (MethodUtils.getAccessibleMethod(clazz, descriptor.getReadMethod()));
     }
 
-
     protected String readTextValue(Node node) {
         if (node == null) {
             return null;
         } else {
             return node.getText();
         }
+    }
+
+    protected int readIntValue(Node node) {
+        return transformToInt(readTextValue(node));
+    }
+
+    protected boolean readBooleanValue(Node node) {
+        return transformToBoolean(readTextValue(node));
+    }
+
+    private int transformToInt(String v) {
+        if (v != null) {
+            try {
+                return Integer.valueOf(v);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    private boolean transformToBoolean(String v) {
+        return Boolean.valueOf(v);
     }
 }
