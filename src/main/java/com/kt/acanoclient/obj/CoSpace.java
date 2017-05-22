@@ -1,10 +1,13 @@
 package com.kt.acanoclient.obj;
 
+import com.kt.acanoclient.anno.AcanoType;
 import com.kt.acanoclient.anno.ID;
+import org.dom4j.Node;
 
 /**
  * Created by Vega Zhou on 2017/5/19.
  */
+@AcanoType("coSpace")
 public class CoSpace extends AcanoObject {
     @ID
     private String id;
@@ -16,6 +19,14 @@ public class CoSpace extends AcanoObject {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public void parseBody(Node bodyNode) {
+        id = readTextValue(bodyNode.selectSingleNode("@id"));
+        name = readTextValue(bodyNode.selectSingleNode("name"));
+        uri = readTextValue(bodyNode.selectSingleNode("uri"));
+        callId = readTextValue(bodyNode.selectSingleNode("callId"));
     }
 
     public void setId(String id) {
@@ -55,5 +66,8 @@ public class CoSpace extends AcanoObject {
     }
 
 
-
+    @Override
+    public String getNewObjectPath() {
+        return "/coSpaces";
+    }
 }
