@@ -2,8 +2,7 @@ package com.kt.acanoclient;
 
 import com.kt.acanoclient.anno.AcanoType;
 import com.kt.acanoclient.exception.AcanoApiException;
-import com.kt.acanoclient.obj.AcanoObject;
-import com.kt.acanoclient.obj.CoSpace;
+import com.kt.acanoclient.obj.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -41,7 +40,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,13 +82,18 @@ public class StandardAcanoClient implements AcanoClient {
     public String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout, int participantLimit)
             throws AcanoApiException {
 
-        //TODO: participantLimit 还没有实现
+        CallProfile callProfile = new CallProfile();
+        callProfile.setParticipantLimit(participantLimit);
+        String callProfileId = createAcanoObject(callProfile);
+
         CoSpace coSpace = new CoSpace();
         coSpace.setName(displayName);
         coSpace.setCallId(sipResourceId);
         coSpace.setUri(sipResourceId);
         coSpace.setPasscode(passCode);
+        coSpace.setCallProfile(callProfileId);
         coSpace.setDefaultLayout(screenLayout.getValue());
+
         String coSpaceId = createAcanoObject(coSpace);
         return coSpaceId;
     }
@@ -101,6 +104,48 @@ public class StandardAcanoClient implements AcanoClient {
         CoSpace coSpace = new CoSpace();
         coSpace.setId(coSpaceId);
         deleteAcanoObject(coSpace);
+    }
+
+
+    @Override
+    public String createCall(String coSpaceId) throws AcanoApiException {
+        Call call = new Call();
+        call.setCoSpace(coSpaceId);
+        return createAcanoObject(call);
+    }
+
+    @Override
+    public void deleteCall(String callId) throws AcanoApiException {
+        Call call = new Call();
+        call.setId(callId);
+        deleteAcanoObject(call);
+    }
+
+    @Override
+    public String addCoSpaceMember(String coSpaceId, String userJid) throws AcanoApiException {
+        CoSpaceUser coSpaceUser = new CoSpaceUser();
+        coSpaceUser.setCoSpaceId(coSpaceId);
+        coSpaceUser.setUserJid(userJid);
+        return createAcanoObject(coSpaceUser);
+    }
+
+    @Override
+    public void removeCoSpaceMember(String coSpaceId, String userJid) {
+
+    }
+
+
+    @Override
+    public String createCallLeg(String callId, String remoteParty) throws AcanoApiException {
+        CallLeg callLeg = new CallLeg();
+        callLeg.setCallId(callId);
+        callLeg.setRemoteParty(remoteParty);
+        return createAcanoObject(callLeg);
+    }
+
+    @Override
+    public void deleteCallLeg(String callId, String remoteParty) {
+
     }
 
     protected String buildEndPoint() {

@@ -14,4 +14,16 @@ public interface AcanoClient {
                            int participantLimit) throws AcanoApiException;
 
     void deleteCoSpace(String coSpaceId) throws AcanoApiException;
+
+    String createCall(String coSpaceId) throws AcanoApiException;
+
+    void deleteCall(String callId) throws AcanoApiException;
+
+    String addCoSpaceMember(String coSpaceId, String userJid) throws AcanoApiException;
+
+    void removeCoSpaceMember(String coSpaceId, String userJid);
+
+    String createCallLeg(String callId, String remoteParty) throws AcanoApiException;
+
+    void deleteCallLeg(String callId, String remoteParty);
 }

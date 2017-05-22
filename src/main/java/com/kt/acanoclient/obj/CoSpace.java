@@ -14,6 +14,7 @@ public class CoSpace extends AcanoObject {
     private String callId;
     private String passcode;
     private String defaultLayout;
+    private String callProfile;
 
     @Override
     public void parseBody(Node bodyNode) {
@@ -70,5 +71,13 @@ public class CoSpace extends AcanoObject {
 
     public void setPasscode(String passcode) {
         this.passcode = passcode;
+    }
+
+    public String getCallProfile() {
+        return callProfile;
+    }
+
+    public void setCallProfile(String callProfile) {
+        this.callProfile = callProfile;
     }
 }
