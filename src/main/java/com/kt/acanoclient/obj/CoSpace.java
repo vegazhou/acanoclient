@@ -12,6 +12,7 @@ public class CoSpace extends AcanoObject {
     private String name;
     private String uri;
     private String callId;
+    private String passcode;
     private String defaultLayout;
 
     @Override
@@ -61,5 +62,13 @@ public class CoSpace extends AcanoObject {
 
     public void setDefaultLayout(String defaultLayout) {
         this.defaultLayout = defaultLayout;
+    }
+
+    public String getPasscode() {
+        return passcode;
+    }
+
+    public void setPasscode(String passcode) {
+        this.passcode = passcode;
     }
 }

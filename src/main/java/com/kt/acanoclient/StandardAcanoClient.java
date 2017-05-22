@@ -41,6 +41,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,58 +79,35 @@ public class StandardAcanoClient implements AcanoClient {
 
     }
 
-    private static TrustManager truseAllManager = new X509TrustManager() {
 
-        public void checkClientTrusted(
-                java.security.cert.X509Certificate[] arg0, String arg1)
-                throws CertificateException {
-        }
+    @Override
+    public String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout, int participantLimit)
+            throws AcanoApiException {
 
-        public void checkServerTrusted(
-                java.security.cert.X509Certificate[] arg0, String arg1)
-                throws CertificateException {
-        }
-
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-    };
-
+        //TODO: participantLimit 还没有实现
+        CoSpace coSpace = new CoSpace();
+        coSpace.setName(displayName);
+        coSpace.setCallId(sipResourceId);
+        coSpace.setUri(sipResourceId);
+        coSpace.setPasscode(passCode);
+        coSpace.setDefaultLayout(screenLayout.getValue());
+        String coSpaceId = createAcanoObject(coSpace);
+        return coSpaceId;
+    }
 
 
-
-
-    public static void main(String args[]) throws AcanoApiException, DocumentException, IllegalAccessException, InstantiationException {
-//        String a = "/api/v1/coSpaces/cc3690ea-e17d-40e1-92e2-8fe98dc61ff6";
-//        System.out.println(a.lastIndexOf("/"));
-
-
-
-//        client.parseXmlAsList(CoSpace.class, COSPACES, "coSpace");
-//        System.out.println(client.buildEndPoint());
-//
-//        CoSpace coSpace = new CoSpace();
-//        coSpace.setId("0cd7ef6d-1161-49b4-9607-52213858175a");
-//        coSpace.setName("By Program--/ABC中文");
-//        coSpace.setCallId("5002");
-//        coSpace.setUri("5002");
-//        coSpace.setDefaultLayout(ScreenLayout.ALL_EQUAL.getValue());
-
-
-//        String newObjectId = client.createAcanoObject(coSpace);
-//        client.updateAcanoObject(coSpace);
-//        client.deleteAcanoObject(coSpace);
-        return;
+    @Override
+    public void deleteCoSpace(String coSpaceId) throws AcanoApiException {
+        CoSpace coSpace = new CoSpace();
+        coSpace.setId(coSpaceId);
+        deleteAcanoObject(coSpace);
     }
 
     protected String buildEndPoint() {
         return "https://" + host + ":" + port + "/api/v1";
     }
 
-    @Override
-    public void createCoSpace(CoSpace coSpace) {
 
-    }
 
 
     public String createAcanoObject(AcanoObject object) throws AcanoApiException {
@@ -297,4 +275,23 @@ public class StandardAcanoClient implements AcanoClient {
         }
 
     }
+
+
+
+    private static TrustManager truseAllManager = new X509TrustManager() {
+
+        public void checkClientTrusted(
+                java.security.cert.X509Certificate[] arg0, String arg1)
+                throws CertificateException {
+        }
+
+        public void checkServerTrusted(
+                java.security.cert.X509Certificate[] arg0, String arg1)
+                throws CertificateException {
+        }
+
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+    };
 }
