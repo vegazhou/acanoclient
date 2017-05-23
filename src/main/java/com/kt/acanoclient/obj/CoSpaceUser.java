@@ -26,6 +26,11 @@ public class CoSpaceUser extends AcanoObject {
     }
 
     @Override
+    public String getQueryPath() {
+        return "/coSpaces/" + coSpaceId + "/coSpaceUsers";
+    }
+
+    @Override
     public void parseBody(Node bodyNode) {
 
     }

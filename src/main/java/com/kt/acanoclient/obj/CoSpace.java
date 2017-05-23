@@ -29,6 +29,11 @@ public class CoSpace extends AcanoObject {
         return "/coSpaces";
     }
 
+    @Override
+    public String getQueryPath() {
+        return "/coSpaces";
+    }
+
     public void setId(String id) {
         this.id = id;
     }

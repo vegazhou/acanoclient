@@ -20,6 +20,11 @@ public class CallProfile extends AcanoObject {
     }
 
     @Override
+    public String getQueryPath() {
+        return "/callProfiles";
+    }
+
+    @Override
     public void parseBody(Node bodyNode) {
         participantLimit = readIntValue(bodyNode.selectSingleNode("participantLimit"));
         messageBoardEnabled = readBooleanValue(bodyNode.selectSingleNode("messageBoardEnabled"));

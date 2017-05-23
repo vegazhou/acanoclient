@@ -1,9 +1,11 @@
 package com.kt.acanoclient;
 
 import com.kt.acanoclient.exception.AcanoApiException;
+import com.kt.acanoclient.obj.CallLeg;
 import com.kt.acanoclient.obj.CoSpace;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Vega Zhou on 2017/5/19.
@@ -26,4 +28,6 @@ public interface AcanoClient {
     String createCallLeg(String callId, String remoteParty) throws AcanoApiException;
 
     void deleteCallLeg(String callId, String remoteParty);
+
+    List<CallLeg> listCallLegs(String callId) throws AcanoApiException;
 }

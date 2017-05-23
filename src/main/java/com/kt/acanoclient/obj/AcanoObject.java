@@ -29,6 +29,8 @@ public abstract class AcanoObject {
 
     public abstract String getNewObjectPath();
 
+    public abstract String getQueryPath();
+
     public abstract void parseBody(Node bodyNode);
 
 

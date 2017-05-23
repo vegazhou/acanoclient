@@ -69,7 +69,7 @@ public class StandardAcanoClient implements AcanoClient {
 
             client = HttpClientBuilder.create().
                     setSSLSocketFactory(new SSLSocketFactory(sslcontext, new AllowAllHostnameVerifier())).
-                    setDefaultCredentialsProvider(credsProvider).
+                    setDefaultCredentialsProvider(credsProvider).setMaxConnTotal(200).setMaxConnPerRoute(100).
                     build();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
@@ -140,12 +140,34 @@ public class StandardAcanoClient implements AcanoClient {
         CallLeg callLeg = new CallLeg();
         callLeg.setCallId(callId);
         callLeg.setRemoteParty(remoteParty);
+        callLeg.setMuteOthersAllowed(true);
+        callLeg.setVideoMuteOthersAllowed(true);
+        callLeg.setChangeLayoutAllowed(true);
         return createAcanoObject(callLeg);
     }
 
     @Override
     public void deleteCallLeg(String callId, String remoteParty) {
 
+    }
+
+
+    @Override
+    public List<CallLeg> listCallLegs(String callId) throws AcanoApiException {
+        CallLeg callLeg = new CallLeg();
+        callLeg.setCallId(callId);
+        List<CallLeg> legs = listAcanoObjects(callLeg);
+
+        List<CallLeg> details = new ArrayList<>();
+        for (CallLeg leg : legs) {
+            leg.setCallId(callId);
+            try {
+                details.add(getAcanoObject(leg));
+            } catch (AcanoApiException ignore) {
+                // 正在响铃状态的call leg无法获取详情
+            }
+        }
+        return details;
     }
 
     protected String buildEndPoint() {
@@ -190,7 +212,7 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     public <T extends AcanoObject> T getAcanoObject(T object) throws AcanoApiException {
-        HttpGet get = new HttpGet(buildEndPoint() + object.getNewObjectPath() + "/" + object.getId());
+        HttpGet get = new HttpGet(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
         get.setConfig(buildDefaultRequestConfig());
         try {
             HttpResponse response = client.execute(get);
@@ -227,7 +249,7 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     public void deleteAcanoObject(AcanoObject object) throws AcanoApiException {
-        HttpDelete delete = new HttpDelete(buildEndPoint() + object.getNewObjectPath() + "/" + object.getId());
+        HttpDelete delete = new HttpDelete(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
         delete.setConfig(buildDefaultRequestConfig());
         try {
             HttpResponse response = client.execute(delete);
@@ -243,10 +265,10 @@ public class StandardAcanoClient implements AcanoClient {
 
 
 
-    public <T extends AcanoObject> List<T> listAcanoObjects(Class<T> clazz) throws AcanoApiException {
+    public <T extends AcanoObject> List<T> listAcanoObjects(T ao) throws AcanoApiException {
         try {
             List<T> result = new ArrayList<>();
-            T ao = clazz.newInstance();
+
             HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath());
             get.setConfig(buildDefaultRequestConfig());
 
@@ -254,12 +276,13 @@ public class StandardAcanoClient implements AcanoClient {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
             }
-            AcanoType at = clazz.getAnnotation(AcanoType.class);
+            AcanoType at = ao.getClass().getAnnotation(AcanoType.class);
             if (at == null) {
                 return result;
             } else {
                 String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
-                result = parseXmlAsList(clazz, xml, at.value());
+                System.out.println(xml);
+                result = (List<T>) parseXmlAsList(ao.getClass(), xml, at.value());
                 return result;
             }
         } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {

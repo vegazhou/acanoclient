@@ -1,7 +1,6 @@
 package com.kt.acanoclient.obj;
 
 import com.kt.acanoclient.anno.AcanoType;
-import com.kt.acanoclient.anno.ID;
 import org.dom4j.Node;
 
 /**
@@ -26,6 +25,11 @@ public class Call extends AcanoObject {
 
     @Override
     public String getNewObjectPath() {
+        return "/calls";
+    }
+
+    @Override
+    public String getQueryPath() {
         return "/calls";
     }
 

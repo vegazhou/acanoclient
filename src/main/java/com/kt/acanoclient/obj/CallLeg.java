@@ -20,7 +20,15 @@ public class CallLeg extends AcanoObject {
     private boolean muteSelfAllowed;
     private boolean videoMuteSelfAllowed;
     private boolean changeLayoutAllowed;
+    private String name;
 
+
+    private String state;
+    private int durationSeconds;
+    private boolean rxAudioMute;
+    private boolean rxVideoMute;
+    private boolean audioEnabled;
+    private boolean videoEnabled;
 
     @Override
     public String getNewObjectPath() {
@@ -28,8 +36,31 @@ public class CallLeg extends AcanoObject {
     }
 
     @Override
-    public void parseBody(Node bodyNode) {
+    public String getQueryPath() {
+        return "/callLegs";
+    }
 
+    @Override
+    public void parseBody(Node bodyNode) {
+        id = readTextValue(bodyNode.selectSingleNode("@id"));
+        name = readTextValue(bodyNode.selectSingleNode("name"));
+        remoteParty = readTextValue(bodyNode.selectSingleNode("remoteParty"));
+
+        presentationContributionAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/presentationContributionAllowed"));
+        presentationViewingAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/presentationViewingAllowed"));
+        muteOthersAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/muteOthersAllowed"));
+        muteSelfAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/muteSelfAllowed"));
+        videoMuteOthersAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/videoMuteOthersAllowed"));
+        videoMuteSelfAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/videoMuteSelfAllowed"));
+        endCallAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/endCallAllowed"));
+        changeLayoutAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/changeLayoutAllowed"));
+
+        state = readTextValue(bodyNode.selectSingleNode("status/state"));
+        durationSeconds = readIntValue(bodyNode.selectSingleNode("status/durationSeconds"));
+        audioEnabled = bodyNode.selectSingleNode("status/rxAudio") != null;
+        videoEnabled = bodyNode.selectSingleNode("status/rxVideo") != null;
+        rxAudioMute = readBooleanValue(bodyNode.selectSingleNode("configuration/rxAudioMute"));
+        rxVideoMute = readBooleanValue(bodyNode.selectSingleNode("configuration/rxVideoMute"));
     }
 
 
@@ -119,5 +150,33 @@ public class CallLeg extends AcanoObject {
 
     public void setChangeLayoutAllowed(boolean changeLayoutAllowed) {
         this.changeLayoutAllowed = changeLayoutAllowed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public int getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public boolean isRxAudioMute() {
+        return rxAudioMute;
+    }
+
+    public boolean isRxVideoMute() {
+        return rxVideoMute;
+    }
+
+    public boolean isAudioEnabled() {
+        return audioEnabled;
+    }
+
+    public boolean isVideoEnabled() {
+        return videoEnabled;
     }
 }
