@@ -2,6 +2,8 @@ package com.kt.acanoclient;
 
 import com.kt.acanoclient.exception.AcanoApiException;
 import com.kt.acanoclient.obj.CallLeg;
+import com.kt.acanoclient.obj.CallLegProfile;
+import com.kt.acanoclient.obj.CallProfile;
 import com.kt.acanoclient.obj.CoSpace;
 
 import java.util.Date;
@@ -27,7 +29,28 @@ public interface AcanoClient {
 
     String createCallLeg(String callId, String remoteParty) throws AcanoApiException;
 
-    void deleteCallLeg(String callId, String remoteParty);
+    void deleteCallLeg(String callLegId) throws AcanoApiException;
+
+
+    String createCallProfile(CallProfile callProfile) throws AcanoApiException;
+
+    CallProfile getCallProfile(String callProfileId) throws AcanoApiException;
+
+    String createCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException;
+
+    CallLegProfile getCallLegProfile(String callLegProfileId) throws AcanoApiException;
+
+
 
     List<CallLeg> listCallLegs(String callId) throws AcanoApiException;
+
+    void rxAudioMute(String callLegId) throws AcanoApiException;
+    void rxAudioUnMute(String callLegId) throws AcanoApiException;
+    void txAudioMute(String callLegId) throws AcanoApiException;
+    void txAudioUnMute(String callLegId) throws AcanoApiException;
+
+    void rxVideoMute(String callLegId) throws AcanoApiException;
+    void rxVideoUnMute(String callLegId) throws AcanoApiException;
+    void txVideoMute(String callLegId) throws AcanoApiException;
+    void txVideoUnMute(String callLegId) throws AcanoApiException;
 }

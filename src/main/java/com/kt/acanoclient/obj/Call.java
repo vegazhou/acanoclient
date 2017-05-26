@@ -15,7 +15,6 @@ public class Call extends AcanoObject {
     private int maxCallLegs;
     private String presenterCallLeg;
     private boolean locked;
-    private boolean recording;
     private boolean allowAllMuteSelf;
     private boolean allowAllPresentationContribution;
     private boolean joinAudioMuteOverride;
@@ -42,7 +41,6 @@ public class Call extends AcanoObject {
         maxCallLegs = readIntValue(bodyNode.selectSingleNode("maxCallLegs"));
         presenterCallLeg = readTextValue(bodyNode.selectSingleNode("presenterCallLeg"));
         locked = readBooleanValue(bodyNode.selectSingleNode("locked"));
-        recording = readBooleanValue(bodyNode.selectSingleNode("recording"));
         allowAllMuteSelf = readBooleanValue(bodyNode.selectSingleNode("allowAllMuteSelf"));
         allowAllPresentationContribution = readBooleanValue(bodyNode.selectSingleNode("allowAllPresentationContribution"));
         joinAudioMuteOverride = readBooleanValue(bodyNode.selectSingleNode("joinAudioMuteOverride"));
@@ -96,14 +94,6 @@ public class Call extends AcanoObject {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
-    }
-
-    public boolean isRecording() {
-        return recording;
-    }
-
-    public void setRecording(boolean recording) {
-        this.recording = recording;
     }
 
     public boolean isAllowAllMuteSelf() {

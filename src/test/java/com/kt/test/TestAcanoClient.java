@@ -28,19 +28,10 @@ public class TestAcanoClient {
 //        client.createCallLeg(callId, "test2@ktsz.com");
 //        client.createCallLeg(CALL_ID, "test1@ktsz.com");
 
-        CallLeg callLeg = new CallLeg();
-        callLeg.setCallId(CALL_ID);
-        List<CallLeg> legs = client.listAcanoObjects(callLeg);
-
-        List<CallLeg> details = new ArrayList<>();
-        for (CallLeg leg : legs) {
-            leg.setCallId(CALL_ID);
-            try {
-                details.add(client.getAcanoObject(leg));
-            } catch (AcanoApiException ignore) {
-                // 正在响铃状态的call leg无法获取详情
-            }
-        }
+//        CallLeg callLeg = new CallLeg();
+//        callLeg.setId("aee2e8cc-4df5-42d8-8dfc-d1bc72444ea9");
+//        callLeg.setTxAudioMute(false);
+//        client.updateAcanoObject(callLeg);
 
 
 //        client.createCallLeg(CALL_ID, "test2@ktsz.com");

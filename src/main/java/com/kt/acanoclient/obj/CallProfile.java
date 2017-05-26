@@ -11,7 +11,8 @@ public class CallProfile extends AcanoObject {
 
     private int participantLimit;
     private boolean messageBoardEnabled;
-    private boolean locked;
+    private String recordingMode;
+    private String streamingMode;
 
 
     @Override
@@ -28,7 +29,6 @@ public class CallProfile extends AcanoObject {
     public void parseBody(Node bodyNode) {
         participantLimit = readIntValue(bodyNode.selectSingleNode("participantLimit"));
         messageBoardEnabled = readBooleanValue(bodyNode.selectSingleNode("messageBoardEnabled"));
-        locked = readBooleanValue(bodyNode.selectSingleNode("locked"));
     }
 
     public int getParticipantLimit() {
@@ -47,11 +47,19 @@ public class CallProfile extends AcanoObject {
         this.messageBoardEnabled = messageBoardEnabled;
     }
 
-    public boolean isLocked() {
-        return locked;
+    public String getRecordingMode() {
+        return recordingMode;
     }
 
-    public void setLocked(boolean locked) {
-        this.locked = locked;
+    public String getStreamingMode() {
+        return streamingMode;
+    }
+
+    public void setStreamingMode(String streamingMode) {
+        this.streamingMode = streamingMode;
+    }
+
+    public void setRecordingMode(String recordingMode) {
+        this.recordingMode = recordingMode;
     }
 }

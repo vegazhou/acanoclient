@@ -84,6 +84,8 @@ public class StandardAcanoClient implements AcanoClient {
 
         CallProfile callProfile = new CallProfile();
         callProfile.setParticipantLimit(participantLimit);
+        callProfile.setRecordingMode(RecordingMode.automatic.toString());
+        callProfile.setStreamingMode(RecordingMode.automatic.toString());
         String callProfileId = createAcanoObject(callProfile);
 
         CoSpace coSpace = new CoSpace();
@@ -111,6 +113,8 @@ public class StandardAcanoClient implements AcanoClient {
     public String createCall(String coSpaceId) throws AcanoApiException {
         Call call = new Call();
         call.setCoSpace(coSpaceId);
+//        call.setRecording(false);
+//        call.setStreaming(true);
         return createAcanoObject(call);
     }
 
@@ -137,20 +141,49 @@ public class StandardAcanoClient implements AcanoClient {
 
     @Override
     public String createCallLeg(String callId, String remoteParty) throws AcanoApiException {
+        CallLegProfile callLegProfile = new CallLegProfile();
+        callLegProfile.setRecordingControlAllowed(true);
+        callLegProfile.setStreamingControlAllowed(true);
+        String callLegProfileId = createAcanoObject(callLegProfile);
         CallLeg callLeg = new CallLeg();
         callLeg.setCallId(callId);
         callLeg.setRemoteParty(remoteParty);
         callLeg.setMuteOthersAllowed(true);
         callLeg.setVideoMuteOthersAllowed(true);
         callLeg.setChangeLayoutAllowed(true);
+        callLeg.setCallLegProfile(callLegProfileId);
         return createAcanoObject(callLeg);
     }
 
     @Override
-    public void deleteCallLeg(String callId, String remoteParty) {
-
+    public void deleteCallLeg(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = new CallLeg();
+        callLeg.setId(callLegId);
+        deleteAcanoObject(callLeg);
     }
 
+
+    @Override
+    public String createCallProfile(CallProfile callProfile) throws AcanoApiException {
+        return createAcanoObject(callProfile);
+    }
+
+
+    @Override
+    public CallProfile getCallProfile(String callProfileId) throws AcanoApiException {
+        return getAcanoObject(callProfileId, CallProfile.class);
+    }
+
+
+    @Override
+    public String createCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException {
+        return createAcanoObject(callLegProfile);
+    }
+
+    @Override
+    public CallLegProfile getCallLegProfile(String callLegProfileId) throws AcanoApiException {
+        return getAcanoObject(callLegProfileId, CallLegProfile.class);
+    }
 
     @Override
     public List<CallLeg> listCallLegs(String callId) throws AcanoApiException {
@@ -170,14 +203,71 @@ public class StandardAcanoClient implements AcanoClient {
         return details;
     }
 
-    protected String buildEndPoint() {
+
+    @Override
+    public void rxAudioMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setRxAudioMute(true);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void rxAudioUnMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setRxAudioMute(false);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void txAudioMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setTxAudioMute(true);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void txAudioUnMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setTxAudioMute(false);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void rxVideoMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setRxVideoMute(true);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void rxVideoUnMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setRxVideoMute(false);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void txVideoMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setTxVideoMute(true);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void txVideoUnMute(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setTxVideoMute(false);
+        updateAcanoObject(callLeg);
+    }
+
+    private String buildEndPoint() {
         return "https://" + host + ":" + port + "/api/v1";
     }
 
 
 
 
-    public String createAcanoObject(AcanoObject object) throws AcanoApiException {
+    private String createAcanoObject(AcanoObject object) throws AcanoApiException {
         HttpPost post = new HttpPost(buildEndPoint() + object.getNewObjectPath());
         post.setConfig(buildDefaultRequestConfig());
         List<BasicNameValuePair> params = object.buildPostParams();
@@ -199,7 +289,7 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    public <T extends AcanoObject> T getAcanoObject(String id, Class<T> clazz) throws AcanoApiException {
+    private <T extends AcanoObject> T getAcanoObject(String id, Class<T> clazz) throws AcanoApiException {
         try {
             T t = clazz.newInstance();
             t.setId(id);
@@ -211,7 +301,7 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    public <T extends AcanoObject> T getAcanoObject(T object) throws AcanoApiException {
+    private <T extends AcanoObject> T getAcanoObject(T object) throws AcanoApiException {
         HttpGet get = new HttpGet(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
         get.setConfig(buildDefaultRequestConfig());
         try {
@@ -230,8 +320,8 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    public void updateAcanoObject(AcanoObject object) throws AcanoApiException {
-        HttpPut put = new HttpPut(buildEndPoint() + object.getNewObjectPath() + "/" + object.getId());
+    private void updateAcanoObject(AcanoObject object) throws AcanoApiException {
+        HttpPut put = new HttpPut(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
         put.setConfig(buildDefaultRequestConfig());
         String putBody = object.buildPutBody();
         put.setEntity(new StringEntity(putBody, ContentType.APPLICATION_FORM_URLENCODED));
@@ -248,7 +338,7 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    public void deleteAcanoObject(AcanoObject object) throws AcanoApiException {
+    private void deleteAcanoObject(AcanoObject object) throws AcanoApiException {
         HttpDelete delete = new HttpDelete(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
         delete.setConfig(buildDefaultRequestConfig());
         try {
@@ -265,7 +355,7 @@ public class StandardAcanoClient implements AcanoClient {
 
 
 
-    public <T extends AcanoObject> List<T> listAcanoObjects(T ao) throws AcanoApiException {
+    private <T extends AcanoObject> List<T> listAcanoObjects(T ao) throws AcanoApiException {
         try {
             List<T> result = new ArrayList<>();
 

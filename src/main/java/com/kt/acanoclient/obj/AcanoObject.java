@@ -49,12 +49,10 @@ public abstract class AcanoObject {
                     continue;
                 }
                 if (getReadMethod(clazz, descriptor) != null) {
-
                     String v = new BeanUtilsBean().getProperty(this, name);
                     params.add(new BasicNameValuePair(name, v));
                 }
             } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NoSuchFieldException e) {
-
             }
         }
         return params;
@@ -76,7 +74,6 @@ public abstract class AcanoObject {
                     continue;
                 }
                 if (getReadMethod(clazz, descriptor) != null) {
-
                     String v = new BeanUtilsBean().getProperty(this, name);
                     props.put(name, v);
                 }
@@ -92,7 +89,6 @@ public abstract class AcanoObject {
             }
             try {
                 String part = entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), "UTF-8");
-//            String part = entry.getKey() + "=" + entry.getValue();
                 parts.add(part);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

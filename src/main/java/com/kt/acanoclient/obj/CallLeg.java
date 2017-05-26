@@ -27,6 +27,8 @@ public class CallLeg extends AcanoObject {
     private int durationSeconds;
     private boolean rxAudioMute;
     private boolean rxVideoMute;
+    private boolean txAudioMute;
+    private boolean txVideoMute;
     private boolean audioEnabled;
     private boolean videoEnabled;
 
@@ -61,6 +63,8 @@ public class CallLeg extends AcanoObject {
         videoEnabled = bodyNode.selectSingleNode("status/rxVideo") != null;
         rxAudioMute = readBooleanValue(bodyNode.selectSingleNode("configuration/rxAudioMute"));
         rxVideoMute = readBooleanValue(bodyNode.selectSingleNode("configuration/rxVideoMute"));
+        txAudioMute = readBooleanValue(bodyNode.selectSingleNode("configuration/txAudioMute"));
+        txVideoMute = readBooleanValue(bodyNode.selectSingleNode("configuration/txVideoMute"));
     }
 
 
@@ -178,5 +182,29 @@ public class CallLeg extends AcanoObject {
 
     public boolean isVideoEnabled() {
         return videoEnabled;
+    }
+
+    public boolean isTxAudioMute() {
+        return txAudioMute;
+    }
+
+    public boolean isTxVideoMute() {
+        return txVideoMute;
+    }
+
+    public void setRxAudioMute(boolean rxAudioMute) {
+        this.rxAudioMute = rxAudioMute;
+    }
+
+    public void setRxVideoMute(boolean rxVideoMute) {
+        this.rxVideoMute = rxVideoMute;
+    }
+
+    public void setTxAudioMute(boolean txAudioMute) {
+        this.txAudioMute = txAudioMute;
+    }
+
+    public void setTxVideoMute(boolean txVideoMute) {
+        this.txVideoMute = txVideoMute;
     }
 }
