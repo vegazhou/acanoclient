@@ -19,7 +19,7 @@ public interface AcanoClient {
 
     void deleteCoSpace(String coSpaceId) throws AcanoApiException;
 
-    String createCall(String coSpaceId) throws AcanoApiException;
+    String createCall(String coSpaceId, int participantLimit) throws AcanoApiException;
 
     void deleteCall(String callId) throws AcanoApiException;
 
@@ -29,6 +29,8 @@ public interface AcanoClient {
 
     String createCallLeg(String callId, String remoteParty) throws AcanoApiException;
 
+    String createCallLeg(String callId, String remoteParty, String callLegProfileId) throws AcanoApiException;
+
     void deleteCallLeg(String callLegId) throws AcanoApiException;
 
 
@@ -36,9 +38,13 @@ public interface AcanoClient {
 
     CallProfile getCallProfile(String callProfileId) throws AcanoApiException;
 
+    void updateCallProfile(CallProfile callProfile) throws AcanoApiException;
+
     String createCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException;
 
     CallLegProfile getCallLegProfile(String callLegProfileId) throws AcanoApiException;
+
+    void updateCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException;
 
 
 

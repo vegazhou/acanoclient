@@ -33,6 +33,18 @@ public abstract class AcanoObject {
 
     public abstract void parseBody(Node bodyNode);
 
+    private String getDirtyFieldName(String fieldName) {
+        return "is" + StringUtils.capitalize(fieldName) + "Dirty";
+    }
+
+    private boolean getDirtyFieldValue(String fieldName) {
+        Class clazz = this.getClass();
+        try {
+            return clazz.getDeclaredField(getDirtyFieldName(fieldName)).getBoolean(this);
+        } catch (NoSuchFieldException | IllegalAccessException ignore) {
+            return true;
+        }
+    }
 
     public List<BasicNameValuePair> buildPostParams() {
         List<BasicNameValuePair> params = new ArrayList<>();
@@ -43,6 +55,10 @@ public abstract class AcanoObject {
         for (PropertyDescriptor descriptor : descriptors) {
             try {
                 String name = descriptor.getName();
+                boolean isFieldDirty = getDirtyFieldValue(name);
+                if (!isFieldDirty) {
+                    continue;
+                }
                 Field field = this.getClass().getDeclaredField(name);
                 ID idAnnotation = field.getAnnotation(ID.class);
                 if (idAnnotation != null) {

@@ -106,9 +106,10 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     @Override
-    public String createCall(String coSpaceId) throws AcanoApiException {
+    public String createCall(String coSpaceId, int participantLimit) throws AcanoApiException {
         Call call = new Call();
         call.setCoSpace(coSpaceId);
+        call.setMaxCallLegs(participantLimit);
 //        call.setRecording(false);
 //        call.setStreaming(true);
         return createAcanoObject(call);
@@ -137,16 +138,17 @@ public class StandardAcanoClient implements AcanoClient {
 
     @Override
     public String createCallLeg(String callId, String remoteParty) throws AcanoApiException {
-        CallLegProfile callLegProfile = new CallLegProfile();
-        callLegProfile.setRecordingControlAllowed(true);
-        callLegProfile.setStreamingControlAllowed(true);
-        String callLegProfileId = createAcanoObject(callLegProfile);
         CallLeg callLeg = new CallLeg();
         callLeg.setCallId(callId);
         callLeg.setRemoteParty(remoteParty);
-        callLeg.setMuteOthersAllowed(true);
-        callLeg.setVideoMuteOthersAllowed(true);
-        callLeg.setChangeLayoutAllowed(true);
+        return createAcanoObject(callLeg);
+    }
+
+    @Override
+    public String createCallLeg(String callId, String remoteParty, String callLegProfileId) throws AcanoApiException {
+        CallLeg callLeg = new CallLeg();
+        callLeg.setCallId(callId);
+        callLeg.setRemoteParty(remoteParty);
         callLeg.setCallLegProfile(callLegProfileId);
         return createAcanoObject(callLeg);
     }
@@ -170,6 +172,11 @@ public class StandardAcanoClient implements AcanoClient {
         return getAcanoObject(callProfileId, CallProfile.class);
     }
 
+    @Override
+    public void updateCallProfile(CallProfile callProfile) throws AcanoApiException {
+        updateAcanoObject(callProfile);
+    }
+
 
     @Override
     public String createCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException {
@@ -180,6 +187,12 @@ public class StandardAcanoClient implements AcanoClient {
     public CallLegProfile getCallLegProfile(String callLegProfileId) throws AcanoApiException {
         return getAcanoObject(callLegProfileId, CallLegProfile.class);
     }
+
+    @Override
+    public void updateCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException {
+        updateAcanoObject(callLegProfile);
+    }
+
 
     @Override
     public List<CallLeg> listCallLegs(String callId) throws AcanoApiException {

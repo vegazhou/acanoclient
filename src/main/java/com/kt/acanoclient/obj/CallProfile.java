@@ -10,9 +10,16 @@ import org.dom4j.Node;
 public class CallProfile extends AcanoObject {
 
     private int participantLimit;
+    protected boolean isParticipantLimitDirty = false;
+
     private boolean messageBoardEnabled;
+    protected boolean isMessageBoardEnabledDirty = false;
+
     private String recordingMode;
+    protected boolean isRecordingModeDirty = false;
+
     private String streamingMode;
+    protected boolean isStreamingModeDirty = false;
 
 
     @Override
@@ -37,6 +44,7 @@ public class CallProfile extends AcanoObject {
 
     public void setParticipantLimit(int participantLimit) {
         this.participantLimit = participantLimit;
+        isParticipantLimitDirty = true;
     }
 
     public boolean isMessageBoardEnabled() {
@@ -45,6 +53,7 @@ public class CallProfile extends AcanoObject {
 
     public void setMessageBoardEnabled(boolean messageBoardEnabled) {
         this.messageBoardEnabled = messageBoardEnabled;
+        isMessageBoardEnabledDirty = true;
     }
 
     public String getRecordingMode() {
@@ -57,9 +66,11 @@ public class CallProfile extends AcanoObject {
 
     public void setStreamingMode(String streamingMode) {
         this.streamingMode = streamingMode;
+        isStreamingModeDirty = true;
     }
 
     public void setRecordingMode(String recordingMode) {
         this.recordingMode = recordingMode;
+        isRecordingModeDirty = true;
     }
 }

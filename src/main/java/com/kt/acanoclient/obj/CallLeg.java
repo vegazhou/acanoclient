@@ -10,26 +10,56 @@ import org.dom4j.Node;
 public class CallLeg extends AcanoObject {
 
     private String callId;
+
     private String remoteParty;
+    protected boolean isRemotePartyDirty = false;
+
     private String callLegProfile;
+
     private boolean presentationContributionAllowed;
+    protected boolean isPresentationContributionAllowedDirty = false;
+
     private boolean presentationViewingAllowed;
+    protected boolean isPresentationViewingAllowedDirty = false;
+
     private boolean endCallAllowed;
+    protected boolean isEndCallAllowedDirty = false;
+
     private boolean muteOthersAllowed;
+    protected boolean isMuteOthersAllowedDirty = false;
+
     private boolean videoMuteOthersAllowed;
+    protected boolean isVideoMuteOthersAllowedDirty = false;
+
     private boolean muteSelfAllowed;
+    protected boolean isMuteSelfAllowedDirty = false;
+
     private boolean videoMuteSelfAllowed;
+    protected boolean isVideoMuteSelfAllowedDirty = false;
+
     private boolean changeLayoutAllowed;
+    protected boolean isChangeLayoutAllowedDirty = false;
+
     private String name;
 
-
     private String state;
+
     private int durationSeconds;
+
     private boolean rxAudioMute;
+    protected boolean isRxAudioMuteDirty = false;
+
     private boolean rxVideoMute;
+    protected boolean isRxVideoMuteDirty = false;
+
     private boolean txAudioMute;
+    protected boolean isTxAudioMuteDirty = false;
+
     private boolean txVideoMute;
+    protected boolean isTxVideoMuteDirty = false;
+
     private boolean audioEnabled;
+
     private boolean videoEnabled;
 
     @Override
@@ -82,6 +112,7 @@ public class CallLeg extends AcanoObject {
 
     public void setRemoteParty(String remoteParty) {
         this.remoteParty = remoteParty;
+        isRemotePartyDirty = true;
     }
 
     public String getCallLegProfile() {
@@ -98,6 +129,7 @@ public class CallLeg extends AcanoObject {
 
     public void setPresentationContributionAllowed(boolean presentationContributionAllowed) {
         this.presentationContributionAllowed = presentationContributionAllowed;
+        isPresentationContributionAllowedDirty = true;
     }
 
     public boolean isPresentationViewingAllowed() {
@@ -106,6 +138,7 @@ public class CallLeg extends AcanoObject {
 
     public void setPresentationViewingAllowed(boolean presentationViewingAllowed) {
         this.presentationViewingAllowed = presentationViewingAllowed;
+        isPresentationViewingAllowedDirty = true;
     }
 
     public boolean isEndCallAllowed() {
@@ -114,6 +147,7 @@ public class CallLeg extends AcanoObject {
 
     public void setEndCallAllowed(boolean endCallAllowed) {
         this.endCallAllowed = endCallAllowed;
+        isEndCallAllowedDirty = true;
     }
 
     public boolean isMuteOthersAllowed() {
@@ -122,6 +156,7 @@ public class CallLeg extends AcanoObject {
 
     public void setMuteOthersAllowed(boolean muteOthersAllowed) {
         this.muteOthersAllowed = muteOthersAllowed;
+        isMuteOthersAllowedDirty = true;
     }
 
     public boolean isVideoMuteOthersAllowed() {
@@ -130,6 +165,7 @@ public class CallLeg extends AcanoObject {
 
     public void setVideoMuteOthersAllowed(boolean videoMuteOthersAllowed) {
         this.videoMuteOthersAllowed = videoMuteOthersAllowed;
+        isVideoMuteOthersAllowedDirty = true;
     }
 
     public boolean isMuteSelfAllowed() {
@@ -138,6 +174,7 @@ public class CallLeg extends AcanoObject {
 
     public void setMuteSelfAllowed(boolean muteSelfAllowed) {
         this.muteSelfAllowed = muteSelfAllowed;
+        isMuteSelfAllowedDirty = true;
     }
 
     public boolean isVideoMuteSelfAllowed() {
@@ -146,6 +183,7 @@ public class CallLeg extends AcanoObject {
 
     public void setVideoMuteSelfAllowed(boolean videoMuteSelfAllowed) {
         this.videoMuteSelfAllowed = videoMuteSelfAllowed;
+        isVideoMuteSelfAllowedDirty = true;
     }
 
     public boolean isChangeLayoutAllowed() {
@@ -154,6 +192,7 @@ public class CallLeg extends AcanoObject {
 
     public void setChangeLayoutAllowed(boolean changeLayoutAllowed) {
         this.changeLayoutAllowed = changeLayoutAllowed;
+        isChangeLayoutAllowedDirty = true;
     }
 
     public String getName() {
@@ -194,17 +233,21 @@ public class CallLeg extends AcanoObject {
 
     public void setRxAudioMute(boolean rxAudioMute) {
         this.rxAudioMute = rxAudioMute;
+        isRxAudioMuteDirty = true;
     }
 
     public void setRxVideoMute(boolean rxVideoMute) {
         this.rxVideoMute = rxVideoMute;
+        isRxVideoMuteDirty = true;
     }
 
     public void setTxAudioMute(boolean txAudioMute) {
         this.txAudioMute = txAudioMute;
+        isTxAudioMuteDirty = true;
     }
 
     public void setTxVideoMute(boolean txVideoMute) {
         this.txVideoMute = txVideoMute;
+        isTxVideoMuteDirty = true;
     }
 }
