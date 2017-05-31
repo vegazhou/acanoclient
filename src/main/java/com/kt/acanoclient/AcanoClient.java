@@ -15,7 +15,7 @@ import java.util.List;
 public interface AcanoClient {
 
     String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout,
-                           int participantLimit) throws AcanoApiException;
+                         String callProfileId, String callLegProfileId) throws AcanoApiException;
 
     void deleteCoSpace(String coSpaceId) throws AcanoApiException;
 

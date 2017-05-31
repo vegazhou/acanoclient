@@ -79,14 +79,9 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     @Override
-    public String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout, int participantLimit)
+    public String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout,
+                                String callProfileId, String callLegProfileId)
             throws AcanoApiException {
-
-        CallProfile callProfile = new CallProfile();
-        callProfile.setParticipantLimit(participantLimit);
-        callProfile.setRecordingMode(RecordingMode.automatic.toString());
-        callProfile.setStreamingMode(RecordingMode.automatic.toString());
-        String callProfileId = createAcanoObject(callProfile);
 
         CoSpace coSpace = new CoSpace();
         coSpace.setName(displayName);
@@ -94,6 +89,7 @@ public class StandardAcanoClient implements AcanoClient {
         coSpace.setUri(sipResourceId);
         coSpace.setPasscode(passCode);
         coSpace.setCallProfile(callProfileId);
+        coSpace.setCallLegProfile(callLegProfileId);
         coSpace.setDefaultLayout(screenLayout.getValue());
 
         String coSpaceId = createAcanoObject(coSpace);
