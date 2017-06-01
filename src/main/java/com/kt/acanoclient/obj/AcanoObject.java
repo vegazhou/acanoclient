@@ -31,6 +31,8 @@ public abstract class AcanoObject {
 
     public abstract String getQueryPath();
 
+    public abstract String getListXPath();
+
     public abstract void parseBody(Node bodyNode);
 
     private String getDirtyFieldName(String fieldName) {

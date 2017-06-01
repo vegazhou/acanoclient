@@ -1,6 +1,5 @@
 package com.kt.acanoclient;
 
-import com.kt.acanoclient.anno.AcanoType;
 import com.kt.acanoclient.exception.AcanoApiException;
 import com.kt.acanoclient.obj.*;
 import org.apache.commons.lang.StringUtils;
@@ -77,6 +76,12 @@ public class StandardAcanoClient implements AcanoClient {
 
     }
 
+    @Override
+    public SystemStatus getSystemStatus() throws AcanoApiException {
+        SystemStatus systemStatus = new SystemStatus();
+        systemStatus = getAcanoObject(systemStatus);
+        return systemStatus;
+    }
 
     @Override
     public String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout,
@@ -96,6 +101,20 @@ public class StandardAcanoClient implements AcanoClient {
         return coSpaceId;
     }
 
+    @Override
+    public void updateCoSpace(String coSpaceId, String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout, String callProfileId, String callLegProfileId) throws AcanoApiException {
+        CoSpace coSpace = new CoSpace();
+        coSpace.setId(coSpaceId);
+        coSpace.setName(displayName);
+        coSpace.setCallId(sipResourceId);
+        coSpace.setUri(sipResourceId);
+        coSpace.setPasscode(passCode);
+        coSpace.setCallProfile(callProfileId);
+        coSpace.setCallLegProfile(callLegProfileId);
+        coSpace.setDefaultLayout(screenLayout.getValue());
+
+        updateAcanoObject(coSpace);
+    }
 
     @Override
     public void deleteCoSpace(String coSpaceId) throws AcanoApiException {
@@ -311,7 +330,7 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     private <T extends AcanoObject> T getAcanoObject(T object) throws AcanoApiException {
-        HttpGet get = new HttpGet(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
+        HttpGet get = new HttpGet(buildEndPoint() + object.getQueryPath());
         get.setConfig(buildDefaultRequestConfig());
         try {
             HttpResponse response = client.execute(get);
@@ -375,15 +394,12 @@ public class StandardAcanoClient implements AcanoClient {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
             }
-            AcanoType at = ao.getClass().getAnnotation(AcanoType.class);
-            if (at == null) {
-                return result;
-            } else {
-                String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
-                System.out.println(xml);
-                result = (List<T>) parseXmlAsList(ao.getClass(), xml, at.value());
-                return result;
-            }
+
+            String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            System.out.println(xml);
+            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            return result;
+
         } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
             e.printStackTrace();
             throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
@@ -394,11 +410,12 @@ public class StandardAcanoClient implements AcanoClient {
 
 
 
-    private <T extends AcanoObject> List<T> parseXmlAsList(Class<T> clazz, String xml, String acanoObjectType)
+    private <T extends AcanoObject> List<T> parseXmlAsList(Class<T> clazz, String xml)
             throws DocumentException, InstantiationException, IllegalAccessException {
         List<T> result = new ArrayList<>();
         Document document = DocumentHelper.parseText(xml);
-        List<Node> nodes = document.selectNodes("/" + acanoObjectType + "s/" + acanoObjectType);
+        String xPath = clazz.newInstance().getListXPath();
+        List<Node> nodes = document.selectNodes(xPath);
         for (Node node : nodes) {
             result.add(parseNode(clazz, node));
         }

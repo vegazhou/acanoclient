@@ -5,6 +5,7 @@ import com.kt.acanoclient.exception.AcanoApiException;
 import com.kt.acanoclient.obj.Call;
 import com.kt.acanoclient.obj.CallLeg;
 import com.kt.acanoclient.obj.CoSpace;
+import com.kt.acanoclient.obj.SystemStatus;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
 
@@ -22,9 +23,7 @@ public class TestAcanoClient {
     @Test
     public void test() throws AcanoApiException {
         StandardAcanoClient client = new StandardAcanoClient("10.10.10.95", 445, "kty", "kty");
-        Call call = new Call();
-        call.setCoSpace("abc");
-        List<BasicNameValuePair> v = call.buildPostParams();
+        SystemStatus systemStatus = client.getSystemStatus();
 
 //        CoSpace coSpace = new CoSpace();
 //        List<BasicNameValuePair> v = coSpace.buildPostParams();

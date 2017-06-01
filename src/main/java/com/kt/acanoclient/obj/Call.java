@@ -1,12 +1,10 @@
 package com.kt.acanoclient.obj;
 
-import com.kt.acanoclient.anno.AcanoType;
 import org.dom4j.Node;
 
 /**
  * Created by Vega Zhou on 2017/5/22.
  */
-@AcanoType("call")
 public class Call extends AcanoObject {
 
     private String coSpace;
@@ -50,7 +48,12 @@ public class Call extends AcanoObject {
 
     @Override
     public String getQueryPath() {
-        return "/calls";
+        return "/calls/" + id;
+    }
+
+    @Override
+    public String getListXPath() {
+        return "/calls/call";
     }
 
     @Override

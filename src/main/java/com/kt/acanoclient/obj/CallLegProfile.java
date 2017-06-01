@@ -1,12 +1,10 @@
 package com.kt.acanoclient.obj;
 
-import com.kt.acanoclient.anno.AcanoType;
 import org.dom4j.Node;
 
 /**
  * Created by Vega Zhou on 2017/5/24.
  */
-@AcanoType("callLegProfile")
 public class CallLegProfile extends AcanoObject {
 
     private boolean needsActivation = false;
@@ -43,7 +41,12 @@ public class CallLegProfile extends AcanoObject {
 
     @Override
     public String getQueryPath() {
-        return "/callLegProfiles";
+        return "/callLegProfiles/" + id;
+    }
+
+    @Override
+    public String getListXPath() {
+        return "/callLegProfiles/callLegProfile";
     }
 
     @Override

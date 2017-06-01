@@ -1,12 +1,10 @@
 package com.kt.acanoclient.obj;
 
-import com.kt.acanoclient.anno.AcanoType;
 import org.dom4j.Node;
 
 /**
  * Created by Vega Zhou on 2017/5/22.
  */
-@AcanoType("coSpaceUser")
 public class CoSpaceUser extends AcanoObject {
 
     private String coSpaceId;
@@ -27,7 +25,12 @@ public class CoSpaceUser extends AcanoObject {
 
     @Override
     public String getQueryPath() {
-        return "/coSpaces/" + coSpaceId + "/coSpaceUsers";
+        return "/coSpaces/" + coSpaceId + "/coSpaceUsers/" + id;
+    }
+
+    @Override
+    public String getListXPath() {
+        return "/coSpaceUsers/coSpaceUser";
     }
 
     @Override

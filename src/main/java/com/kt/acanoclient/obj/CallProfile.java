@@ -1,12 +1,10 @@
 package com.kt.acanoclient.obj;
 
-import com.kt.acanoclient.anno.AcanoType;
 import org.dom4j.Node;
 
 /**
  * Created by Vega Zhou on 2017/5/22.
  */
-@AcanoType("callProfile")
 public class CallProfile extends AcanoObject {
 
     private int participantLimit;
@@ -29,7 +27,12 @@ public class CallProfile extends AcanoObject {
 
     @Override
     public String getQueryPath() {
-        return "/callProfiles";
+        return "/callProfiles/" + id;
+    }
+
+    @Override
+    public String getListXPath() {
+        return "/callProfiles/callProfile";
     }
 
     @Override

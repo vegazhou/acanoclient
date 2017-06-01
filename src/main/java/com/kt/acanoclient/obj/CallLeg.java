@@ -1,12 +1,10 @@
 package com.kt.acanoclient.obj;
 
-import com.kt.acanoclient.anno.AcanoType;
 import org.dom4j.Node;
 
 /**
  * Created by Vega Zhou on 2017/5/22.
  */
-@AcanoType("callLeg")
 public class CallLeg extends AcanoObject {
 
     private String callId;
@@ -69,7 +67,12 @@ public class CallLeg extends AcanoObject {
 
     @Override
     public String getQueryPath() {
-        return "/callLegs";
+        return "/callLegs/" + id;
+    }
+
+    @Override
+    public String getListXPath() {
+        return "/callLegs/callLeg";
     }
 
     @Override

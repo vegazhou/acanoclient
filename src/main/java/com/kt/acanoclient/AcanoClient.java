@@ -1,10 +1,7 @@
 package com.kt.acanoclient;
 
 import com.kt.acanoclient.exception.AcanoApiException;
-import com.kt.acanoclient.obj.CallLeg;
-import com.kt.acanoclient.obj.CallLegProfile;
-import com.kt.acanoclient.obj.CallProfile;
-import com.kt.acanoclient.obj.CoSpace;
+import com.kt.acanoclient.obj.*;
 
 import java.util.Date;
 import java.util.List;
@@ -14,8 +11,13 @@ import java.util.List;
  */
 public interface AcanoClient {
 
+    SystemStatus getSystemStatus() throws AcanoApiException;
+
     String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout,
                          String callProfileId, String callLegProfileId) throws AcanoApiException;
+
+    void updateCoSpace(String coSpaceId, String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout,
+                       String callProfileId, String callLegProfileId) throws AcanoApiException;
 
     void deleteCoSpace(String coSpaceId) throws AcanoApiException;
 
