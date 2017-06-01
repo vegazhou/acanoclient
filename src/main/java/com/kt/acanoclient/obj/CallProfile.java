@@ -37,6 +37,7 @@ public class CallProfile extends AcanoObject {
 
     @Override
     public void parseBody(Node bodyNode) {
+        id = readTextValue(bodyNode.selectSingleNode("@id"));
         participantLimit = readIntValue(bodyNode.selectSingleNode("participantLimit"));
         messageBoardEnabled = readBooleanValue(bodyNode.selectSingleNode("messageBoardEnabled"));
     }

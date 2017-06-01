@@ -42,15 +42,23 @@ public interface AcanoClient {
 
     void updateCallProfile(CallProfile callProfile) throws AcanoApiException;
 
+    void deleteCallProfile(String callProfileId) throws AcanoApiException;
+
     String createCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException;
 
     CallLegProfile getCallLegProfile(String callLegProfileId) throws AcanoApiException;
 
     void updateCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException;
 
+    void deleteCallLegProfile(String callLegProfileId) throws AcanoApiException;
 
 
     List<CallLeg> listCallLegs(String callId) throws AcanoApiException;
+
+    int countAllUsers() throws AcanoApiException;
+
+    List<User> listUsers(int offset, int limit) throws AcanoApiException;
+
 
     void rxAudioMute(String callLegId) throws AcanoApiException;
     void rxAudioUnMute(String callLegId) throws AcanoApiException;

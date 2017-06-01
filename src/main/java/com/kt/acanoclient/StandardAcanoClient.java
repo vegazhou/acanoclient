@@ -196,6 +196,12 @@ public class StandardAcanoClient implements AcanoClient {
         updateAcanoObject(callProfile);
     }
 
+    @Override
+    public void deleteCallProfile(String callProfileId) throws AcanoApiException {
+        CallProfile callProfile = new CallProfile();
+        callProfile.setId(callProfileId);
+        deleteAcanoObject(callProfile);
+    }
 
     @Override
     public String createCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException {
@@ -212,6 +218,12 @@ public class StandardAcanoClient implements AcanoClient {
         updateAcanoObject(callLegProfile);
     }
 
+    @Override
+    public void deleteCallLegProfile(String callLegProfileId) throws AcanoApiException {
+        CallLegProfile callLegProfile = new CallLegProfile();
+        callLegProfile.setId(callLegProfileId);
+        deleteAcanoObject(callLegProfile);
+    }
 
     @Override
     public List<CallLeg> listCallLegs(String callId) throws AcanoApiException {
@@ -229,6 +241,16 @@ public class StandardAcanoClient implements AcanoClient {
             }
         }
         return details;
+    }
+
+
+    public int countAllUsers() throws AcanoApiException {
+        return countAcanoObjects(new User());
+    }
+
+
+    public List<User> listUsers(int offset, int limit) throws AcanoApiException {
+        return listAcanoObjects(new User(), offset, limit);
     }
 
 
@@ -291,8 +313,6 @@ public class StandardAcanoClient implements AcanoClient {
     private String buildEndPoint() {
         return "https://" + host + ":" + port + "/api/v1";
     }
-
-
 
 
     private String createAcanoObject(AcanoObject object) throws AcanoApiException {
@@ -367,7 +387,7 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     private void deleteAcanoObject(AcanoObject object) throws AcanoApiException {
-        HttpDelete delete = new HttpDelete(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
+        HttpDelete delete = new HttpDelete(buildEndPoint() + object.getQueryPath());
         delete.setConfig(buildDefaultRequestConfig());
         try {
             HttpResponse response = client.execute(delete);
@@ -382,12 +402,52 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
+    private <T extends AcanoObject> int countAcanoObjects(T ao) throws AcanoApiException {
+        try {
+            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath());
+            get.setConfig(buildDefaultRequestConfig());
+
+            HttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
+            }
+            String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            return countRecords(xml);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
 
     private <T extends AcanoObject> List<T> listAcanoObjects(T ao) throws AcanoApiException {
         try {
             List<T> result = new ArrayList<>();
 
             HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath());
+            get.setConfig(buildDefaultRequestConfig());
+
+            HttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
+            }
+
+            String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            return result;
+
+        } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
+            e.printStackTrace();
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
+
+    private <T extends AcanoObject> List<T> listAcanoObjects(T ao, int offset, int limit) throws AcanoApiException {
+        try {
+            List<T> result = new ArrayList<>();
+
+            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?offset=" + offset + "&limit=" + limit);
             get.setConfig(buildDefaultRequestConfig());
 
             HttpResponse response = client.execute(get);
@@ -407,7 +467,20 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
+    private int countRecords(String xml) {
+        try {
+            Document document = DocumentHelper.parseText(xml);
+            Node totalNode = document.getRootElement().selectSingleNode("@total");
 
+            if (totalNode == null) {
+                return 0;
+            } else {
+                return transformToInt(totalNode.getText());
+            }
+        } catch (DocumentException e) {
+            return 0;
+        }
+    }
 
 
     private <T extends AcanoObject> List<T> parseXmlAsList(Class<T> clazz, String xml)
@@ -436,8 +509,6 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-
-
     private RequestConfig buildDefaultRequestConfig() {
         return RequestConfig.custom()
                 .setConnectTimeout(10000)   //设置连接超时时间
@@ -454,12 +525,24 @@ public class StandardAcanoClient implements AcanoClient {
             return null;
         } else {
             String location = locationHeader.getValue();
-            String id = StringUtils.substring(location, StringUtils.lastIndexOf(location, "/") + 1 );
+            String id = StringUtils.substring(location, StringUtils.lastIndexOf(location, "/") + 1);
             return id;
         }
 
     }
 
+
+    private int transformToInt(String v) {
+        if (v != null) {
+            try {
+                return Integer.valueOf(v);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
 
 
     private static TrustManager truseAllManager = new X509TrustManager() {
