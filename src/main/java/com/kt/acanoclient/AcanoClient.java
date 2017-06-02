@@ -57,7 +57,9 @@ public interface AcanoClient {
 
     int countAllUsers() throws AcanoApiException;
 
-    List<User> listUsers(int offset, int limit) throws AcanoApiException;
+    List<User> listUsers(int offset) throws AcanoApiException;
+
+    User getUser(String userId) throws AcanoApiException;
 
 
     void rxAudioMute(String callLegId) throws AcanoApiException;

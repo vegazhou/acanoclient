@@ -28,4 +28,8 @@ public class SystemStatus extends AcanoObject {
     public void parseBody(Node bodyNode) {
         softwareVersion = readTextValue(bodyNode.selectSingleNode("softwareVersion"));
     }
+
+    public String getSoftwareVersion() {
+        return softwareVersion;
+    }
 }

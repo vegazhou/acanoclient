@@ -249,10 +249,14 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    public List<User> listUsers(int offset, int limit) throws AcanoApiException {
-        return listAcanoObjects(new User(), offset, limit);
+    public List<User> listUsers(int offset) throws AcanoApiException {
+        return listAcanoObjects(new User(), offset);
     }
 
+    @Override
+    public User getUser(String userId) throws AcanoApiException {
+        return getAcanoObject(userId, User.class);
+    }
 
     @Override
     public void rxAudioMute(String callLegId) throws AcanoApiException {
@@ -433,6 +437,30 @@ public class StandardAcanoClient implements AcanoClient {
             }
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            return result;
+
+        } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
+            e.printStackTrace();
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
+
+    private <T extends AcanoObject> List<T> listAcanoObjects(T ao, int offset) throws AcanoApiException {
+        try {
+            List<T> result = new ArrayList<>();
+
+            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?offset=" + offset);
+            get.setConfig(buildDefaultRequestConfig());
+
+            HttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
+            }
+
+            String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            System.out.println(xml);
             result = (List<T>) parseXmlAsList(ao.getClass(), xml);
             return result;
 
