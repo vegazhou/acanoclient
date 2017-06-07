@@ -314,6 +314,20 @@ public class StandardAcanoClient implements AcanoClient {
         updateAcanoObject(callLeg);
     }
 
+    @Override
+    public void allowPresentation(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setPresentationContributionAllowed(true);
+        updateAcanoObject(callLeg);
+    }
+
+    @Override
+    public void disallowPresentation(String callLegId) throws AcanoApiException {
+        CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
+        callLeg.setPresentationContributionAllowed(false);
+        updateAcanoObject(callLeg);
+    }
+
     private String buildEndPoint() {
         return "https://" + host + ":" + port + "/api/v1";
     }
@@ -373,7 +387,7 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     private void updateAcanoObject(AcanoObject object) throws AcanoApiException {
-        HttpPut put = new HttpPut(buildEndPoint() + object.getQueryPath() + "/" + object.getId());
+        HttpPut put = new HttpPut(buildEndPoint() + object.getQueryPath());
         put.setConfig(buildDefaultRequestConfig());
         String putBody = object.buildPutBody();
         put.setEntity(new StringEntity(putBody, ContentType.APPLICATION_FORM_URLENCODED));

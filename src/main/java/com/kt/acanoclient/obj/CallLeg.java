@@ -60,6 +60,8 @@ public class CallLeg extends AcanoObject {
 
     private boolean videoEnabled;
 
+    private String layout;
+
     @Override
     public String getNewObjectPath() {
         return "/calls/" + callId + "/callLegs";
@@ -98,6 +100,8 @@ public class CallLeg extends AcanoObject {
         rxVideoMute = readBooleanValue(bodyNode.selectSingleNode("configuration/rxVideoMute"));
         txAudioMute = readBooleanValue(bodyNode.selectSingleNode("configuration/txAudioMute"));
         txVideoMute = readBooleanValue(bodyNode.selectSingleNode("configuration/txVideoMute"));
+
+        layout = readTextValue(bodyNode.selectSingleNode("status/layout"));
     }
 
 
@@ -252,5 +256,13 @@ public class CallLeg extends AcanoObject {
     public void setTxVideoMute(boolean txVideoMute) {
         this.txVideoMute = txVideoMute;
         isTxVideoMuteDirty = true;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 }

@@ -71,4 +71,7 @@ public interface AcanoClient {
     void rxVideoUnMute(String callLegId) throws AcanoApiException;
     void txVideoMute(String callLegId) throws AcanoApiException;
     void txVideoUnMute(String callLegId) throws AcanoApiException;
+
+    void allowPresentation(String callLegId) throws AcanoApiException;
+    void disallowPresentation(String callLegId) throws AcanoApiException;
 }
