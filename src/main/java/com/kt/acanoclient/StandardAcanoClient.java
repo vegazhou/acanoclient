@@ -84,34 +84,129 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
     @Override
-    public String createCoSpace(String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout,
-                                String callProfileId, String callLegProfileId)
+    public String createTenant(String name) throws AcanoApiException {
+        Tenant tenant = new Tenant();
+        tenant.setName(name);
+        String id = createAcanoObject(tenant);
+        return id;
+    }
+
+    @Override
+    public void updateTenant(String tenantId, String name) throws AcanoApiException {
+        Tenant tenant = new Tenant();
+        tenant.setId(tenantId);
+        tenant.setName(name);
+        updateAcanoObject(tenant);
+    }
+
+    @Override
+    public String createLdapServer(String address, int port, String user, String password) throws AcanoApiException {
+        LdapServer ldapServer = new LdapServer();
+        ldapServer.setAddress(address);
+        ldapServer.setPortNumber(port);
+        ldapServer.setUsername(user);
+        ldapServer.setPassword(password);
+        String id = createAcanoObject(ldapServer);
+        return id;
+    }
+
+
+    @Override
+    public void updateLdapServer(String id, String address, int port, String user, String password) throws AcanoApiException {
+        LdapServer ldapServer = new LdapServer();
+        ldapServer.setId(id);
+        ldapServer.setAddress(address);
+        ldapServer.setPortNumber(port);
+        ldapServer.setUsername(user);
+        ldapServer.setPassword(password);
+        updateAcanoObject(ldapServer);
+    }
+
+    @Override
+    public String createLdapMapping(String jidMapping, String nameMapping) throws AcanoApiException {
+        LdapMapping ldapMapping = new LdapMapping();
+        ldapMapping.setJidMapping(jidMapping);
+        ldapMapping.setNameMapping(nameMapping);
+        String id = createAcanoObject(ldapMapping);
+        return id;
+    }
+
+
+    @Override
+    public void updateLdapMapping(String id, String jidMapping, String nameMapping) throws AcanoApiException {
+        LdapMapping ldapMapping = new LdapMapping();
+        ldapMapping.setId(id);
+        ldapMapping.setJidMapping(jidMapping);
+        ldapMapping.setNameMapping(nameMapping);
+        updateAcanoObject(ldapMapping);
+    }
+
+    @Override
+    public String createLdapSource(String server, String mapping, String tenant, String baseDn, String filter) throws AcanoApiException {
+        LdapSource ldapSource = new LdapSource();
+        ldapSource.setServer(server);
+        ldapSource.setMapping(mapping);
+        ldapSource.setTenant(tenant);
+        ldapSource.setBaseDn(baseDn);
+        ldapSource.setFilter(filter);
+        String id = createAcanoObject(ldapSource);
+        return id;
+    }
+
+
+    @Override
+    public void updateLdapSource(String id, String server, String mapping, String tenant, String baseDn, String filter) throws AcanoApiException {
+        LdapSource ldapSource = new LdapSource();
+        ldapSource.setId(id);
+        ldapSource.setServer(server);
+        ldapSource.setMapping(mapping);
+        ldapSource.setTenant(tenant);
+        ldapSource.setBaseDn(baseDn);
+        ldapSource.setFilter(filter);
+        updateAcanoObject(ldapSource);
+    }
+
+    @Override
+    public String createLdapSync(String tenant, String source) throws AcanoApiException {
+        LdapSync ldapSync = new LdapSync();
+        ldapSync.setTenant(tenant);
+        ldapSync.setLdapSource(source);
+        String id = createAcanoObject(ldapSync);
+        return id;
+    }
+
+    @Override
+    public String createCoSpace(String displayName, String passCode, ScreenLayout screenLayout,
+                                String callProfileId, String callLegProfileId, String streamUrl)
             throws AcanoApiException {
 
         CoSpace coSpace = new CoSpace();
         coSpace.setName(displayName);
-        coSpace.setCallId(sipResourceId);
-        coSpace.setUri(sipResourceId);
         coSpace.setPasscode(passCode);
+        coSpace.setRequireCallId(true);
         coSpace.setCallProfile(callProfileId);
         coSpace.setCallLegProfile(callLegProfileId);
         coSpace.setDefaultLayout(screenLayout.getValue());
+        if (StringUtils.isNotBlank(streamUrl)) {
+            coSpace.setStreamUrl(streamUrl);
+        }
 
         String coSpaceId = createAcanoObject(coSpace);
         return coSpaceId;
     }
 
     @Override
-    public void updateCoSpace(String coSpaceId, String displayName, String sipResourceId, String passCode, ScreenLayout screenLayout, String callProfileId, String callLegProfileId) throws AcanoApiException {
+    public void updateCoSpace(String coSpaceId, String displayName, String passCode, ScreenLayout screenLayout,
+                              String callProfileId, String callLegProfileId, String streamUrl)
+            throws AcanoApiException {
         CoSpace coSpace = new CoSpace();
         coSpace.setId(coSpaceId);
         coSpace.setName(displayName);
-        coSpace.setCallId(sipResourceId);
-        coSpace.setUri(sipResourceId);
         coSpace.setPasscode(passCode);
         coSpace.setCallProfile(callProfileId);
         coSpace.setCallLegProfile(callLegProfileId);
         coSpace.setDefaultLayout(screenLayout.getValue());
+        coSpace.setStreamUrl(streamUrl);
 
         updateAcanoObject(coSpace);
     }
@@ -139,6 +234,21 @@ public class StandardAcanoClient implements AcanoClient {
         Call call = new Call();
         call.setId(callId);
         deleteAcanoObject(call);
+    }
+
+
+    @Override
+    public void showMessageTextInCall(String callId, String messageText, MessagePosition position, int durationInSeconds) throws AcanoApiException {
+        Call call = new Call();
+        call.setId(callId);
+        call.setMessageText(messageText);
+        call.setMessagePosition(position.toString());
+        if (durationInSeconds > 0) {
+            call.setMessageDuration(String.valueOf(durationInSeconds));
+        } else {
+            call.setMessageDuration("permanent");
+        }
+        updateAcanoObject(call);
     }
 
     @Override
@@ -244,13 +354,15 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    public int countAllUsers() throws AcanoApiException {
-        return countAcanoObjects(new User());
+    @Override
+    public int countAllUsers(String tenantFilter) throws AcanoApiException {
+        return countAcanoUsers(new User(), tenantFilter);
     }
 
 
-    public List<User> listUsers(int offset) throws AcanoApiException {
-        return listAcanoObjects(new User(), offset);
+    @Override
+    public List<User> listUsers(int offset, String tenantFilter) throws AcanoApiException {
+        return listAcanoUsers(new User(), offset, tenantFilter);
     }
 
     @Override
@@ -437,6 +549,23 @@ public class StandardAcanoClient implements AcanoClient {
         }
     }
 
+    private <T extends AcanoObject> int countAcanoUsers(T ao, String tenantFilter) throws AcanoApiException {
+        try {
+            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?tenantFilter=" + tenantFilter);
+            get.setConfig(buildDefaultRequestConfig());
+
+            HttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
+            }
+            String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            return countRecords(xml);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
 
     private <T extends AcanoObject> List<T> listAcanoObjects(T ao) throws AcanoApiException {
         try {
@@ -451,6 +580,30 @@ public class StandardAcanoClient implements AcanoClient {
             }
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            return result;
+
+        } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
+            e.printStackTrace();
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
+
+    private <T extends AcanoObject> List<T> listAcanoUsers(T ao, int offset, String tenantFilter) throws AcanoApiException {
+        try {
+            List<T> result = new ArrayList<>();
+
+            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?offset=" + offset + "&tenantFilter=" + tenantFilter);
+            get.setConfig(buildDefaultRequestConfig());
+
+            HttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
+            }
+
+            String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            System.out.println(xml);
             result = (List<T>) parseXmlAsList(ao.getClass(), xml);
             return result;
 

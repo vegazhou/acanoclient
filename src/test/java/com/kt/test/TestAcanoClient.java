@@ -21,10 +21,19 @@ public class TestAcanoClient {
     public void test() throws AcanoApiException {
         StandardAcanoClient client = new StandardAcanoClient("10.10.10.95", 445, "kty", "kty");
         SystemStatus systemStatus = client.getSystemStatus();
+
+//        String serverId = client.createLdapServer("10.10.10.94", 389, "test1", "Pass1234");
+//        String mappingId = client.createLdapMapping("$sAMAccountName$@ktsz.com", "$name$");
+//        String tenantId = client.createTenant("ˮ̡");
+//        String sourceId = client.createLdapSource(serverId, mappingId, tenantId, "CN=Users,DC=ktsz,DC=com", "(objectClass=person)");
+
+        client.createLdapSync("f17cea20-2eb4-4fa2-8cf4-d8c1192304db", "6798eed7-f2bc-48da-8087-334beca336e4");
+
+
 //        CallProfile cp = new CallProfile();
 //        String id = client.createCallProfile(cp);
 
-        int cnt = client.countAllUsers();
+//        int cnt = client.countAllUsers();
 
 //        CoSpace coSpace = new CoSpace();
 //        List<BasicNameValuePair> v = coSpace.buildPostParams();

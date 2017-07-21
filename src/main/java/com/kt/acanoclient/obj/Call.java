@@ -37,6 +37,12 @@ public class Call extends AcanoObject {
     private String messageText;
     protected boolean isMessageTextDirty = false;
 
+    private String messagePosition;
+    protected boolean isMessagePositionDirty = false;
+
+    private String messageDuration;
+    protected boolean isMessageDurationDirty = false;
+
     private boolean activeWhenEmpty;
     protected boolean isActiveWhenEmptyDirty = false;
 
@@ -160,6 +166,24 @@ public class Call extends AcanoObject {
     public void setMessageText(String messageText) {
         this.messageText = messageText;
         isMessageTextDirty = true;
+    }
+
+    public String getMessagePosition() {
+        return messagePosition;
+    }
+
+    public void setMessagePosition(String messagePosition) {
+        this.messagePosition = messagePosition;
+        isMessagePositionDirty = true;
+    }
+
+    public String getMessageDuration() {
+        return messageDuration;
+    }
+
+    public void setMessageDuration(String messageDuration) {
+        this.messageDuration = messageDuration;
+        isMessageDurationDirty = true;
     }
 
     public boolean isActiveWhenEmpty() {

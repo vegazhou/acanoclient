@@ -14,6 +14,10 @@ public class CoSpace extends AcanoObject {
     private String defaultLayout;
     private String callProfile;
     private String callLegProfile;
+    private boolean requireCallId = false;
+
+    private String streamUrl;
+    protected boolean isStreamUrlDirty = false;
 
     @Override
     public void parseBody(Node bodyNode) {
@@ -96,5 +100,30 @@ public class CoSpace extends AcanoObject {
 
     public void setCallLegProfile(String callLegProfile) {
         this.callLegProfile = callLegProfile;
+    }
+
+    public boolean isRequireCallId() {
+        return requireCallId;
+    }
+
+    public void setRequireCallId(boolean requireCallId) {
+        this.requireCallId = requireCallId;
+    }
+
+    public boolean isStreamUrlDirty() {
+        return isStreamUrlDirty;
+    }
+
+    public void setIsStreamUrlDirty(boolean isStreamUrlDirty) {
+        this.isStreamUrlDirty = isStreamUrlDirty;
+    }
+
+    public String getStreamUrl() {
+        return streamUrl;
+    }
+
+    public void setStreamUrl(String streamUrl) {
+        this.streamUrl = streamUrl;
+        isStreamUrlDirty = true;
     }
 }
