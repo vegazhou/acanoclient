@@ -34,6 +34,9 @@ public interface AcanoClient {
     String createCoSpace(String displayName, String passCode, ScreenLayout screenLayout,
                          String callProfileId, String callLegProfileId, String streamUrl) throws AcanoApiException;
 
+    String createCoSpace(String displayName, String passCode, ScreenLayout screenLayout, String callId,
+                         String callProfileId, String callLegProfileId, String streamUrl) throws AcanoApiException;
+
     void updateCoSpace(String coSpaceId, String displayName, String passCode, ScreenLayout screenLayout,
                        String callProfileId, String callLegProfileId, String streamUrl) throws AcanoApiException;
 
@@ -53,6 +56,8 @@ public interface AcanoClient {
 
     String createCallLeg(String callId, String remoteParty, String callLegProfileId) throws AcanoApiException;
 
+    String createCallLeg(CallLeg callLeg) throws AcanoApiException;
+
     void deleteCallLeg(String callLegId) throws AcanoApiException;
 
 
@@ -65,6 +70,8 @@ public interface AcanoClient {
     void deleteCallProfile(String callProfileId) throws AcanoApiException;
 
     String createCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException;
+
+    CallLeg getCallLeg(String callLegId) throws AcanoApiException;
 
     CallLegProfile getCallLegProfile(String callLegProfileId) throws AcanoApiException;
 

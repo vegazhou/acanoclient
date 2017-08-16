@@ -6,7 +6,6 @@ import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
-import org.dom4j.Node;
 
 import java.beans.PropertyDescriptor;
 import java.io.UnsupportedEncodingException;
@@ -22,7 +21,7 @@ import java.util.Map;
 /**
  * Created by Vega Zhou on 2017/5/19.
  */
-public abstract class AcanoObject {
+public abstract class AcanoObject implements XmlInstantiable {
 
     @ID
     protected String id;
@@ -33,7 +32,7 @@ public abstract class AcanoObject {
 
     public abstract String getListXPath();
 
-    public abstract void parseBody(Node bodyNode);
+
 
     private String getDirtyFieldName(String fieldName) {
         return "is" + StringUtils.capitalize(fieldName) + "Dirty";
@@ -121,37 +120,7 @@ public abstract class AcanoObject {
         return (MethodUtils.getAccessibleMethod(clazz, descriptor.getReadMethod()));
     }
 
-    protected String readTextValue(Node node) {
-        if (node == null) {
-            return null;
-        } else {
-            return node.getText();
-        }
-    }
 
-    protected int readIntValue(Node node) {
-        return transformToInt(readTextValue(node));
-    }
-
-    protected boolean readBooleanValue(Node node) {
-        return transformToBoolean(readTextValue(node));
-    }
-
-    private int transformToInt(String v) {
-        if (v != null) {
-            try {
-                return Integer.valueOf(v);
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-
-    private boolean transformToBoolean(String v) {
-        return Boolean.valueOf(v);
-    }
 
 
     public String getId() {

@@ -1,6 +1,10 @@
 package com.kt.acanoclient.obj;
 
 import org.dom4j.Node;
+import static com.kt.acanoclient.util.XmlUtil.readTextValue;
+import static com.kt.acanoclient.util.XmlUtil.readBooleanValue;
+import static com.kt.acanoclient.util.XmlUtil.readIntValue;
+
 
 /**
  * Created by Vega Zhou on 2017/5/19.

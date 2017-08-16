@@ -27,7 +27,9 @@ public class TestAcanoClient {
 //        String tenantId = client.createTenant("ˮ̡");
 //        String sourceId = client.createLdapSource(serverId, mappingId, tenantId, "CN=Users,DC=ktsz,DC=com", "(objectClass=person)");
 
-        client.createLdapSync("f17cea20-2eb4-4fa2-8cf4-d8c1192304db", "6798eed7-f2bc-48da-8087-334beca336e4");
+//        client.createLdapSync("f17cea20-2eb4-4fa2-8cf4-d8c1192304db", "6798eed7-f2bc-48da-8087-334beca336e4");
+
+        CallLeg callLeg = client.getCallLeg("c6a42549-c8e5-428a-8baa-f1e7b955c044");
 
 
 //        CallProfile cp = new CallProfile();

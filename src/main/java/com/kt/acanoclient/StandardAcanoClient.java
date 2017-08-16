@@ -186,7 +186,27 @@ public class StandardAcanoClient implements AcanoClient {
         coSpace.setRequireCallId(true);
         coSpace.setCallProfile(callProfileId);
         coSpace.setCallLegProfile(callLegProfileId);
-        coSpace.setDefaultLayout(screenLayout.getValue());
+        coSpace.setDefaultLayout(screenLayout.toString());
+        if (StringUtils.isNotBlank(streamUrl)) {
+            coSpace.setStreamUrl(streamUrl);
+        }
+
+        String coSpaceId = createAcanoObject(coSpace);
+        return coSpaceId;
+    }
+
+
+    @Override
+    public String createCoSpace(String displayName, String passCode, ScreenLayout screenLayout, String callId, String callProfileId, String callLegProfileId, String streamUrl) throws AcanoApiException {
+        CoSpace coSpace = new CoSpace();
+        coSpace.setName(displayName);
+        coSpace.setPasscode(passCode);
+        coSpace.setRequireCallId(true);
+        coSpace.setCallId(callId);
+        coSpace.setUri(callId);
+        coSpace.setCallProfile(callProfileId);
+        coSpace.setCallLegProfile(callLegProfileId);
+        coSpace.setDefaultLayout(screenLayout.toString());
         if (StringUtils.isNotBlank(streamUrl)) {
             coSpace.setStreamUrl(streamUrl);
         }
@@ -205,7 +225,7 @@ public class StandardAcanoClient implements AcanoClient {
         coSpace.setPasscode(passCode);
         coSpace.setCallProfile(callProfileId);
         coSpace.setCallLegProfile(callLegProfileId);
-        coSpace.setDefaultLayout(screenLayout.getValue());
+        coSpace.setDefaultLayout(screenLayout.toString());
         coSpace.setStreamUrl(streamUrl);
 
         updateAcanoObject(coSpace);
@@ -283,6 +303,11 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
     @Override
+    public String createCallLeg(CallLeg callLeg) throws AcanoApiException {
+        return createAcanoObject(callLeg);
+    }
+
+    @Override
     public void deleteCallLeg(String callLegId) throws AcanoApiException {
         CallLeg callLeg = new CallLeg();
         callLeg.setId(callLegId);
@@ -323,6 +348,8 @@ public class StandardAcanoClient implements AcanoClient {
         return getAcanoObject(callLegProfileId, CallLegProfile.class);
     }
 
+
+
     @Override
     public void updateCallLegProfile(CallLegProfile callLegProfile) throws AcanoApiException {
         updateAcanoObject(callLegProfile);
@@ -353,6 +380,10 @@ public class StandardAcanoClient implements AcanoClient {
         return details;
     }
 
+    @Override
+    public CallLeg getCallLeg(String callLegId) throws AcanoApiException {
+        return getAcanoObject(callLegId, CallLeg.class);
+    }
 
     @Override
     public int countAllUsers(String tenantFilter) throws AcanoApiException {

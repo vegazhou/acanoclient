@@ -33,6 +33,8 @@ public class CallLegProfile extends AcanoObject {
     private boolean callLockAllowed;
     private boolean recordingControlAllowed;
     private boolean streamingControlAllowed;
+    private String qualityMain = "unrestricted";   //unrestricted|max1080p30|max720p30|max480p30
+    private String qualityPresentation = "unrestricted";   //unrestricted|max1080p30|max720p5
 
     @Override
     public String getNewObjectPath() {
@@ -261,5 +263,21 @@ public class CallLegProfile extends AcanoObject {
 
     public void setStreamingControlAllowed(boolean streamingControlAllowed) {
         this.streamingControlAllowed = streamingControlAllowed;
+    }
+
+    public String getQualityMain() {
+        return qualityMain;
+    }
+
+    public void setQualityMain(String qualityMain) {
+        this.qualityMain = qualityMain;
+    }
+
+    public String getQualityPresentation() {
+        return qualityPresentation;
+    }
+
+    public void setQualityPresentation(String qualityPresentation) {
+        this.qualityPresentation = qualityPresentation;
     }
 }
