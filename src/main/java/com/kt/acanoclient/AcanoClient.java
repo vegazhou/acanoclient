@@ -13,6 +13,10 @@ public interface AcanoClient {
 
     SystemStatus getSystemStatus() throws AcanoApiException;
 
+    Licensing getLicensing() throws AcanoApiException;
+
+    Load getLoad() throws AcanoApiException;
+
     String createTenant(String name) throws AcanoApiException;
 
     void updateTenant(String tenantId, String name) throws AcanoApiException;

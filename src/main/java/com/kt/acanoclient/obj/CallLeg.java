@@ -84,6 +84,7 @@ public class CallLeg extends AcanoObject {
     private boolean audioEnabled;
     private boolean videoEnabled;
     private int durationSeconds;
+    private String type;
     private Configuration configuration;
     private Status status;
 
@@ -107,7 +108,7 @@ public class CallLeg extends AcanoObject {
         id = readTextValue(bodyNode.selectSingleNode("@id"));
         name = readTextValue(bodyNode.selectSingleNode("name"));
         remoteParty = readTextValue(bodyNode.selectSingleNode("remoteParty"));
-
+        type = readTextValue(bodyNode.selectSingleNode("type"));
         presentationContributionAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/presentationContributionAllowed"));
         presentationViewingAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/presentationViewingAllowed"));
         muteOthersAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/muteOthersAllowed"));
@@ -250,6 +251,10 @@ public class CallLeg extends AcanoObject {
         return state;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public int getDurationSeconds() {
         return durationSeconds;
     }
@@ -375,6 +380,7 @@ public class CallLeg extends AcanoObject {
 
         @Override
         public void parseBody(Node bodyNode) {
+            if (bodyNode == null) return;
             ownerId = readTextValue(bodyNode.selectSingleNode("ownerId"));
             defaultLayout = readTextValue(bodyNode.selectSingleNode("defaultLayout"));
             presentationDisplayMode = readTextValue(bodyNode.selectSingleNode("presentationDisplayMode"));
@@ -442,6 +448,7 @@ public class CallLeg extends AcanoObject {
 
         @Override
         public void parseBody(Node bodyNode) {
+            if (bodyNode == null) return;
             state = readTextValue(bodyNode.selectSingleNode("state"));
             durationSeconds = readIntValue(bodyNode.selectSingleNode("state"));
             direction = readTextValue(bodyNode.selectSingleNode("direction"));
@@ -524,6 +531,7 @@ public class CallLeg extends AcanoObject {
 
         @Override
         public void parseBody(Node bodyNode) {
+            if (bodyNode == null) return;
             codec = readTextValue(bodyNode.selectSingleNode("codec"));
             packetLossPercentage = readDoubleValue(bodyNode.selectSingleNode("packetLossPercentage"));
             jitter = readLongValue(bodyNode.selectSingleNode("jitter"));
@@ -570,6 +578,7 @@ public class CallLeg extends AcanoObject {
 
         @Override
         public void parseBody(Node bodyNode) {
+            if (bodyNode == null) return;
             codec = readTextValue(bodyNode.selectSingleNode("codec"));
             packetLossPercentage = readDoubleValue(bodyNode.selectSingleNode("packetLossPercentage"));
             jitter = readLongValue(bodyNode.selectSingleNode("jitter"));

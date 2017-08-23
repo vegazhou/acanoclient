@@ -1,9 +1,8 @@
 package com.kt.acanoclient.obj;
 
 import org.dom4j.Node;
-import static com.kt.acanoclient.util.XmlUtil.readTextValue;
-import static com.kt.acanoclient.util.XmlUtil.readBooleanValue;
-import static com.kt.acanoclient.util.XmlUtil.readIntValue;
+
+import static com.kt.acanoclient.util.XmlUtil.*;
 
 
 /**
@@ -12,6 +11,8 @@ import static com.kt.acanoclient.util.XmlUtil.readIntValue;
 public class SystemStatus extends AcanoObject {
 
     private String softwareVersion;
+    private long uptimeSeconds;
+    private long callLegsActive;
 
     @Override
     public String getNewObjectPath() {
@@ -31,9 +32,19 @@ public class SystemStatus extends AcanoObject {
     @Override
     public void parseBody(Node bodyNode) {
         softwareVersion = readTextValue(bodyNode.selectSingleNode("softwareVersion"));
+        uptimeSeconds = readLongValue(bodyNode.selectSingleNode("uptimeSeconds"));
+        callLegsActive = readLongValue(bodyNode.selectSingleNode("callLegsActive"));
     }
 
     public String getSoftwareVersion() {
         return softwareVersion;
+    }
+
+    public long getUptimeSeconds() {
+        return uptimeSeconds;
+    }
+
+    public long getCallLegsActive() {
+        return callLegsActive;
     }
 }

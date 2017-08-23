@@ -1,5 +1,6 @@
 package com.kt.test;
 
+import com.kt.acanoclient.ScreenLayout;
 import com.kt.acanoclient.StandardAcanoClient;
 import com.kt.acanoclient.exception.AcanoApiException;
 import com.kt.acanoclient.obj.*;
@@ -19,8 +20,13 @@ public class TestAcanoClient {
 
     @Test
     public void test() throws AcanoApiException {
-        StandardAcanoClient client = new StandardAcanoClient("10.10.10.95", 445, "kty", "kty");
+//        StandardAcanoClient client = new StandardAcanoClient("10.10.10.95", 445, "kty", "kty");
+        StandardAcanoClient client = new StandardAcanoClient("10.133.51.21", 445, "admin", "skytech@123");
+        Licensing licensing = client.getLicensing();
         SystemStatus systemStatus = client.getSystemStatus();
+        Load load = client.getLoad();
+
+
 
 //        String serverId = client.createLdapServer("10.10.10.94", 389, "test1", "Pass1234");
 //        String mappingId = client.createLdapMapping("$sAMAccountName$@ktsz.com", "$name$");
@@ -29,7 +35,7 @@ public class TestAcanoClient {
 
 //        client.createLdapSync("f17cea20-2eb4-4fa2-8cf4-d8c1192304db", "6798eed7-f2bc-48da-8087-334beca336e4");
 
-        CallLeg callLeg = client.getCallLeg("c6a42549-c8e5-428a-8baa-f1e7b955c044");
+//        CallLeg callLeg = client.getCallLeg("41175316-1edb-45dd-bcc2-86866be50792");
 
 
 //        CallProfile cp = new CallProfile();

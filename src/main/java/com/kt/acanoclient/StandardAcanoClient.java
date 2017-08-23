@@ -84,6 +84,20 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
     @Override
+    public Licensing getLicensing() throws AcanoApiException {
+        Licensing licensing = new Licensing();
+        licensing = getAcanoObject(licensing);
+        return licensing;
+    }
+
+    @Override
+    public Load getLoad() throws AcanoApiException {
+        Load load = new Load();
+        load = getAcanoObject(load);
+        return load;
+    }
+
+    @Override
     public String createTenant(String name) throws AcanoApiException {
         Tenant tenant = new Tenant();
         tenant.setName(name);
