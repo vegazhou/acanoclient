@@ -3,7 +3,6 @@ package com.kt.acanoclient;
 import com.kt.acanoclient.exception.AcanoApiException;
 import com.kt.acanoclient.obj.*;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,16 +34,22 @@ public interface AcanoClient {
 
     String createLdapSync(String tenant, String source) throws AcanoApiException;
 
+    String createCoSpace(CoSpace coSpace) throws AcanoApiException;
+
     String createCoSpace(String displayName, String passCode, ScreenLayout screenLayout,
                          String callProfileId, String callLegProfileId, String streamUrl) throws AcanoApiException;
 
     String createCoSpace(String displayName, String passCode, ScreenLayout screenLayout, String callId,
                          String callProfileId, String callLegProfileId, String streamUrl) throws AcanoApiException;
 
+    void updateCoSpace(CoSpace coSpace) throws AcanoApiException;
+
     void updateCoSpace(String coSpaceId, String displayName, String passCode, ScreenLayout screenLayout,
                        String callProfileId, String callLegProfileId, String streamUrl) throws AcanoApiException;
 
     void deleteCoSpace(String coSpaceId) throws AcanoApiException;
+
+    CoSpace getCoSpace(String coSpaceId) throws AcanoApiException;
 
     String createCall(String coSpaceId, int participantLimit) throws AcanoApiException;
 
@@ -61,6 +66,8 @@ public interface AcanoClient {
     String createCallLeg(String callId, String remoteParty, String callLegProfileId) throws AcanoApiException;
 
     String createCallLeg(CallLeg callLeg) throws AcanoApiException;
+
+    void updateCallLeg(CallLeg callleg) throws AcanoApiException;
 
     void deleteCallLeg(String callLegId) throws AcanoApiException;
 
@@ -105,4 +112,6 @@ public interface AcanoClient {
 
     void allowPresentation(String callLegId) throws AcanoApiException;
     void disallowPresentation(String callLegId) throws AcanoApiException;
+
+    void setImportance(String callLegId, int importance) throws AcanoApiException;
 }

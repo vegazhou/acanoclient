@@ -1,6 +1,7 @@
 package com.kt.acanoclient;
 
 import com.kt.acanoclient.exception.AcanoApiException;
+import com.kt.acanoclient.exception.AcanoObjectNotFoundException;
 import com.kt.acanoclient.obj.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
@@ -190,6 +191,11 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
     @Override
+    public String createCoSpace(CoSpace coSpace) throws AcanoApiException {
+        return createAcanoObject(coSpace);
+    }
+
+    @Override
     public String createCoSpace(String displayName, String passCode, ScreenLayout screenLayout,
                                 String callProfileId, String callLegProfileId, String streamUrl)
             throws AcanoApiException {
@@ -229,6 +235,14 @@ public class StandardAcanoClient implements AcanoClient {
         return coSpaceId;
     }
 
+
+    @Override
+    public void updateCoSpace(CoSpace coSpace) throws AcanoApiException {
+        updateAcanoObject(coSpace);
+    }
+
+
+
     @Override
     public void updateCoSpace(String coSpaceId, String displayName, String passCode, ScreenLayout screenLayout,
                               String callProfileId, String callLegProfileId, String streamUrl)
@@ -254,10 +268,16 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     @Override
+    public CoSpace getCoSpace(String coSpaceId) throws AcanoApiException {
+        return getAcanoObject(coSpaceId, CoSpace.class);
+    }
+
+    @Override
     public String createCall(String coSpaceId, int participantLimit) throws AcanoApiException {
         Call call = new Call();
         call.setCoSpace(coSpaceId);
         call.setMaxCallLegs(participantLimit);
+        call.setAllowAllPresentationContribution(true);
 //        call.setRecording(false);
 //        call.setStreaming(true);
         return createAcanoObject(call);
@@ -319,6 +339,11 @@ public class StandardAcanoClient implements AcanoClient {
     @Override
     public String createCallLeg(CallLeg callLeg) throws AcanoApiException {
         return createAcanoObject(callLeg);
+    }
+
+    @Override
+    public void updateCallLeg(CallLeg callleg) throws AcanoApiException {
+        updateAcanoObject(callleg);
     }
 
     @Override
@@ -471,6 +496,15 @@ public class StandardAcanoClient implements AcanoClient {
         updateAcanoObject(callLeg);
     }
 
+
+    @Override
+    public void setImportance(String callLegId, int importance) throws AcanoApiException {
+        Participant participant = new Participant();
+        participant.setId(callLegId);
+        participant.setImportance(importance);
+        updateAcanoObject(participant);
+    }
+
     @Override
     public void allowPresentation(String callLegId) throws AcanoApiException {
         CallLeg callLeg = getAcanoObject(callLegId, CallLeg.class);
@@ -561,12 +595,15 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    private void deleteAcanoObject(AcanoObject object) throws AcanoApiException {
+    private void deleteAcanoObject(AcanoObject object) throws AcanoObjectNotFoundException, AcanoApiException {
         HttpDelete delete = new HttpDelete(buildEndPoint() + object.getQueryPath());
         delete.setConfig(buildDefaultRequestConfig());
         try {
             HttpResponse response = client.execute(delete);
             int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == HttpStatus.SC_NOT_FOUND) {
+                throw new AcanoObjectNotFoundException(statusCode, EntityUtils.toString(response.getEntity()));
+            }
             if (statusCode != HttpStatus.SC_OK) {
                 throw new AcanoApiException(statusCode, EntityUtils.toString(response.getEntity()));
             }

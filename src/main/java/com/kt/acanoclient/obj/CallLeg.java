@@ -444,6 +444,7 @@ public class CallLeg extends AcanoObject {
         AudioStatus rxAudio;
         AudioStatus txAudio;
         VideoStatus rxVideo;
+        VideoStatus rxVideoPresentation;
         VideoStatus txVideo;
 
         @Override
@@ -471,10 +472,18 @@ public class CallLeg extends AcanoObject {
             }
 
             {
-                Node rxVideoNode = bodyNode.selectSingleNode("rxVideo");
+                Node rxVideoNode = bodyNode.selectSingleNode("rxVideo[@role=\"main\"]");
                 if (rxVideoNode != null) {
                     rxVideo = new VideoStatus();
                     rxVideo.parseBody(rxVideoNode);
+                }
+            }
+
+            {
+                Node rxVideoPresentationNode = bodyNode.selectSingleNode("rxVideo[@role=\"presentation\"]");
+                if (rxVideoPresentationNode != null) {
+                    rxVideoPresentation = new VideoStatus();
+                    rxVideoPresentation.parseBody(rxVideoPresentationNode);
                 }
             }
 
@@ -517,6 +526,10 @@ public class CallLeg extends AcanoObject {
 
         public VideoStatus getTxVideo() {
             return txVideo;
+        }
+
+        public VideoStatus getRxVideoPresentation() {
+            return rxVideoPresentation;
         }
     }
 

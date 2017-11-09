@@ -20,11 +20,15 @@ public class TestAcanoClient {
 
     @Test
     public void test() throws AcanoApiException {
-//        StandardAcanoClient client = new StandardAcanoClient("10.10.10.95", 445, "kty", "kty");
-        StandardAcanoClient client = new StandardAcanoClient("10.133.51.21", 445, "admin", "skytech@123");
-        Licensing licensing = client.getLicensing();
-        SystemStatus systemStatus = client.getSystemStatus();
-        Load load = client.getLoad();
+        StandardAcanoClient client = new StandardAcanoClient("10.10.10.95", 445, "kty", "kty");
+//        StandardAcanoClient client = new StandardAcanoClient("10.133.51.21", 445, "admin", "skytech@123");
+//        Licensing licensing = client.getLicensing();
+//        SystemStatus systemStatus = client.getSystemStatus();
+//        Load load = client.getLoad();
+
+
+//        client.createCoSpace("vega vega vega", "", ScreenLayout.allEqual, null, null, null);
+        client.getCallLeg("52eb20a7-4029-4358-9932-f9b68038990c");
 
 
 

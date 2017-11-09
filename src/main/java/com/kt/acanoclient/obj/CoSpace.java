@@ -20,6 +20,12 @@ public class CoSpace extends AcanoObject {
     private String callLegProfile;
     private boolean requireCallId = false;
 
+    private boolean nonMemberAccess = false;
+    protected boolean isNonMemberAccessDirty = false;
+
+    private String secret;
+    protected boolean isSecretDirty = false;
+
     private String streamUrl;
     protected boolean isStreamUrlDirty = false;
 
@@ -28,6 +34,7 @@ public class CoSpace extends AcanoObject {
         id = readTextValue(bodyNode.selectSingleNode("@id"));
         name = readTextValue(bodyNode.selectSingleNode("name"));
         uri = readTextValue(bodyNode.selectSingleNode("uri"));
+        secret = readTextValue(bodyNode.selectSingleNode("secret"));
         callId = readTextValue(bodyNode.selectSingleNode("callId"));
     }
 
@@ -120,6 +127,24 @@ public class CoSpace extends AcanoObject {
 
     public void setIsStreamUrlDirty(boolean isStreamUrlDirty) {
         this.isStreamUrlDirty = isStreamUrlDirty;
+    }
+
+    public boolean isNonMemberAccess() {
+        return nonMemberAccess;
+    }
+
+    public void setNonMemberAccess(boolean nonMemberAccess) {
+        this.nonMemberAccess = nonMemberAccess;
+        this.isNonMemberAccessDirty = true;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+        isSecretDirty = true;
     }
 
     public String getStreamUrl() {

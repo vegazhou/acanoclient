@@ -85,6 +85,11 @@ public abstract class AcanoObject implements XmlInstantiable {
         for (PropertyDescriptor descriptor : descriptors) {
             try {
                 String name = descriptor.getName();
+                boolean isFieldDirty = getDirtyFieldValue(name);
+                if (!isFieldDirty) {
+                    continue;
+                }
+
                 Field field = this.getClass().getDeclaredField(name);
                 ID idAnnotation = field.getAnnotation(ID.class);
                 if (idAnnotation != null) {
