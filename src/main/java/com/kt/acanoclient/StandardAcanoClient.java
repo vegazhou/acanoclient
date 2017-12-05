@@ -35,6 +35,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -498,12 +499,31 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     @Override
-    public void setImportance(String callLegId, int importance) throws AcanoApiException {
+    public void setImportance(String participantId, int importance) throws AcanoApiException {
         Participant participant = new Participant();
-        participant.setId(callLegId);
+        participant.setId(participantId);
         participant.setImportance(importance);
         updateAcanoObject(participant);
     }
+
+    @Override
+    public void setImportance(String userJid, String callId, int importance) throws AcanoApiException {
+        List<Participant> possibleParticipants = listAcanoObjects(new Participant(), userJid);
+        Participant participant = null;
+        for (Participant possibleParticipant : possibleParticipants) {
+            if (StringUtils.equalsIgnoreCase(possibleParticipant.getCallId(), callId)) {
+                participant = possibleParticipant;
+                break;
+            }
+        }
+
+        if (participant != null) {
+            setImportance(participant.getId(), importance);
+        } else {
+            throw new AcanoApiException(404, "participant not found");
+        }
+    }
+
 
     @Override
     public void allowPresentation(String callLegId) throws AcanoApiException {
@@ -651,8 +671,6 @@ public class StandardAcanoClient implements AcanoClient {
 
     private <T extends AcanoObject> List<T> listAcanoObjects(T ao) throws AcanoApiException {
         try {
-            List<T> result = new ArrayList<>();
-
             HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath());
             get.setConfig(buildDefaultRequestConfig());
 
@@ -662,7 +680,28 @@ public class StandardAcanoClient implements AcanoClient {
             }
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
-            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            List<T> result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            return result;
+
+        } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
+            e.printStackTrace();
+            throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
+
+    public <T extends AcanoObject> List<T> listAcanoObjects(T ao, String filter) throws AcanoApiException {
+        try {
+            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?filter=" + URLEncoder.encode(filter, "UTF-8"));
+            get.setConfig(buildDefaultRequestConfig());
+
+            HttpResponse response = client.execute(get);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new AcanoApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, EntityUtils.toString(response.getEntity()));
+            }
+
+            String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            List<T> result = (List<T>) parseXmlAsList(ao.getClass(), xml);
             return result;
 
         } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
@@ -673,10 +712,7 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     private <T extends AcanoObject> List<T> listAcanoUsers(T ao, int offset, String tenantFilter) throws AcanoApiException {
-        try {
-            List<T> result = new ArrayList<>();
-
-            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?offset=" + offset + "&tenantFilter=" + tenantFilter);
+        try {HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?offset=" + offset + "&tenantFilter=" + tenantFilter);
             get.setConfig(buildDefaultRequestConfig());
 
             HttpResponse response = client.execute(get);
@@ -686,7 +722,7 @@ public class StandardAcanoClient implements AcanoClient {
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
             System.out.println(xml);
-            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            List<T> result = (List<T>) parseXmlAsList(ao.getClass(), xml);
             return result;
 
         } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
@@ -698,8 +734,6 @@ public class StandardAcanoClient implements AcanoClient {
 
     private <T extends AcanoObject> List<T> listAcanoObjects(T ao, int offset) throws AcanoApiException {
         try {
-            List<T> result = new ArrayList<>();
-
             HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?offset=" + offset);
             get.setConfig(buildDefaultRequestConfig());
 
@@ -710,7 +744,7 @@ public class StandardAcanoClient implements AcanoClient {
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
             System.out.println(xml);
-            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            List<T> result = (List<T>) parseXmlAsList(ao.getClass(), xml);
             return result;
 
         } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {
@@ -722,8 +756,6 @@ public class StandardAcanoClient implements AcanoClient {
 
     private <T extends AcanoObject> List<T> listAcanoObjects(T ao, int offset, int limit) throws AcanoApiException {
         try {
-            List<T> result = new ArrayList<>();
-
             HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?offset=" + offset + "&limit=" + limit);
             get.setConfig(buildDefaultRequestConfig());
 
@@ -734,7 +766,7 @@ public class StandardAcanoClient implements AcanoClient {
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
             System.out.println(xml);
-            result = (List<T>) parseXmlAsList(ao.getClass(), xml);
+            List<T> result = (List<T>) parseXmlAsList(ao.getClass(), xml);
             return result;
 
         } catch (InstantiationException | IllegalAccessException | IOException | DocumentException e) {

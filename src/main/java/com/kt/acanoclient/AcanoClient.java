@@ -114,4 +114,5 @@ public interface AcanoClient {
     void disallowPresentation(String callLegId) throws AcanoApiException;
 
     void setImportance(String callLegId, int importance) throws AcanoApiException;
+    void setImportance(String userJid, String callId, int importance) throws AcanoApiException;
 }

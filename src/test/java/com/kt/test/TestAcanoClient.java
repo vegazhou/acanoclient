@@ -28,7 +28,8 @@ public class TestAcanoClient {
 
 
 //        client.createCoSpace("vega vega vega", "", ScreenLayout.allEqual, null, null, null);
-        client.getCallLeg("52eb20a7-4029-4358-9932-f9b68038990c");
+//        client.getCallLeg("52eb20a7-4029-4358-9932-f9b68038990c");
+        List<Participant> pars = client.listAcanoObjects(new Participant(), "wEijia.zhou@ktsz.com");
 
 
 
