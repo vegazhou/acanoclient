@@ -293,6 +293,15 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     @Override
+    public void deleteCallByCoSpaceId(String coSpaceId) throws AcanoApiException {
+        List<Call> calls = listCalls(coSpaceId);
+        for (Call call : calls) {
+            deleteCall(call.getId());
+        }
+    }
+
+
+    @Override
     public void showMessageTextInCall(String callId, String messageText, MessagePosition position, int durationInSeconds) throws AcanoApiException {
         Call call = new Call();
         call.setId(callId);
@@ -400,6 +409,11 @@ public class StandardAcanoClient implements AcanoClient {
         CallLegProfile callLegProfile = new CallLegProfile();
         callLegProfile.setId(callLegProfileId);
         deleteAcanoObject(callLegProfile);
+    }
+
+    @Override
+    public List<Call> listCalls(String coSpaceId) throws AcanoApiException {
+        return listAcanoCalls(new Call(), coSpaceId);
     }
 
     @Override
@@ -670,8 +684,25 @@ public class StandardAcanoClient implements AcanoClient {
 
 
     private <T extends AcanoObject> List<T> listAcanoObjects(T ao) throws AcanoApiException {
+        List<T> result = new ArrayList<>();
+        int pageResultSize = 0;
+        do {
+            List<T> page = listAcanoObjects(ao, 0, 20);
+            if (page != null && page.size() > 0) {
+                result.addAll(page);
+                pageResultSize = page.size();
+            } else {
+                pageResultSize = 0;
+            }
+
+        } while (pageResultSize >= 20);
+       return result;
+    }
+
+
+    public <T extends AcanoObject> List<T> listAcanoObjects(T ao, String filter) throws AcanoApiException {
         try {
-            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath());
+            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?filter=" + URLEncoder.encode(filter, "UTF-8"));
             get.setConfig(buildDefaultRequestConfig());
 
             HttpResponse response = client.execute(get);
@@ -690,9 +721,8 @@ public class StandardAcanoClient implements AcanoClient {
     }
 
 
-    public <T extends AcanoObject> List<T> listAcanoObjects(T ao, String filter) throws AcanoApiException {
-        try {
-            HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?filter=" + URLEncoder.encode(filter, "UTF-8"));
+    private <T extends AcanoObject> List<T> listAcanoCalls(T ao, String coSpaceFilter) throws AcanoApiException {
+        try {HttpGet get = new HttpGet(buildEndPoint() + ao.getNewObjectPath() + "?coSpaceFilter=" + coSpaceFilter);
             get.setConfig(buildDefaultRequestConfig());
 
             HttpResponse response = client.execute(get);
@@ -701,6 +731,7 @@ public class StandardAcanoClient implements AcanoClient {
             }
 
             String xml = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            System.out.println(xml);
             List<T> result = (List<T>) parseXmlAsList(ao.getClass(), xml);
             return result;
 

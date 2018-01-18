@@ -26,6 +26,8 @@ public abstract class AcanoObject implements XmlInstantiable {
     @ID
     protected String id;
 
+    private boolean ignoreBlankFields = true;
+
     public abstract String getNewObjectPath();
 
     public abstract String getQueryPath();
@@ -106,7 +108,7 @@ public abstract class AcanoObject implements XmlInstantiable {
 
         List<String> parts = new ArrayList<>();
         for (Map.Entry<String, String> entry : props.entrySet()) {
-            if (StringUtils.isBlank(entry.getValue())) {
+            if (StringUtils.isBlank(entry.getValue()) && isIgnoreBlankFields()) {
                 continue;
             }
             try {
@@ -134,5 +136,13 @@ public abstract class AcanoObject implements XmlInstantiable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isIgnoreBlankFields() {
+        return ignoreBlankFields;
+    }
+
+    public void setIgnoreBlankFields(boolean ignoreBlankFields) {
+        this.ignoreBlankFields = ignoreBlankFields;
     }
 }

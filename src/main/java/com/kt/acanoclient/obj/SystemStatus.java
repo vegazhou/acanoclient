@@ -33,7 +33,7 @@ public class SystemStatus extends AcanoObject {
     public void parseBody(Node bodyNode) {
         softwareVersion = readTextValue(bodyNode.selectSingleNode("softwareVersion"));
         uptimeSeconds = readLongValue(bodyNode.selectSingleNode("uptimeSeconds"));
-        callLegsActive = readLongValue(bodyNode.selectSingleNode("uptimeSeconds"));
+        callLegsActive = readLongValue(bodyNode.selectSingleNode("callLegsActive"));
     }
 
     public String getSoftwareVersion() {

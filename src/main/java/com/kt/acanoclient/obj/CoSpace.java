@@ -1,9 +1,8 @@
 package com.kt.acanoclient.obj;
 
 import org.dom4j.Node;
+
 import static com.kt.acanoclient.util.XmlUtil.readTextValue;
-import static com.kt.acanoclient.util.XmlUtil.readBooleanValue;
-import static com.kt.acanoclient.util.XmlUtil.readIntValue;
 
 
 /**
@@ -12,12 +11,26 @@ import static com.kt.acanoclient.util.XmlUtil.readIntValue;
 public class CoSpace extends AcanoObject {
 
     private String name;
+    protected boolean isNameDirty = false;
+
     private String uri;
+    protected boolean isUriDirty = false;
+
     private String callId;
+    protected boolean isCallIdDirty = false;
+
     private String passcode;
+    protected boolean isPasscodeDirty = false;
+
     private String defaultLayout;
+    protected boolean isDefaultLayoutDirty = false;
+
     private String callProfile;
+    protected boolean isCallProfileDirty = false;
+
     private String callLegProfile;
+    protected boolean isCallLegProfileDirty = false;
+
     private boolean requireCallId = false;
 
     private boolean nonMemberAccess = false;
@@ -63,6 +76,7 @@ public class CoSpace extends AcanoObject {
 
     public void setName(String name) {
         this.name = name;
+        this.isNameDirty = true;
     }
 
     public String getUri() {
@@ -71,6 +85,7 @@ public class CoSpace extends AcanoObject {
 
     public void setUri(String uri) {
         this.uri = uri;
+        this.isUriDirty = true;
     }
 
     public String getCallId() {
@@ -79,6 +94,7 @@ public class CoSpace extends AcanoObject {
 
     public void setCallId(String callId) {
         this.callId = callId;
+        this.isCallIdDirty = true;
     }
 
     public String getDefaultLayout() {
@@ -87,6 +103,7 @@ public class CoSpace extends AcanoObject {
 
     public void setDefaultLayout(String defaultLayout) {
         this.defaultLayout = defaultLayout;
+        this.isDefaultLayoutDirty = true;
     }
 
     public String getPasscode() {
@@ -95,6 +112,7 @@ public class CoSpace extends AcanoObject {
 
     public void setPasscode(String passcode) {
         this.passcode = passcode;
+        this.isPasscodeDirty = true;
     }
 
     public String getCallProfile() {
@@ -103,6 +121,7 @@ public class CoSpace extends AcanoObject {
 
     public void setCallProfile(String callProfile) {
         this.callProfile = callProfile;
+        this.isCallProfileDirty = true;
     }
 
     public String getCallLegProfile() {
@@ -111,6 +130,7 @@ public class CoSpace extends AcanoObject {
 
     public void setCallLegProfile(String callLegProfile) {
         this.callLegProfile = callLegProfile;
+        this.isCallLegProfileDirty = true;
     }
 
     public boolean isRequireCallId() {

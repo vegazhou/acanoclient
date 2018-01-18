@@ -55,6 +55,8 @@ public interface AcanoClient {
 
     void deleteCall(String callId) throws AcanoApiException;
 
+    void deleteCallByCoSpaceId(String coSpaceId) throws AcanoApiException;
+
     void showMessageTextInCall(String callId, String messageText, MessagePosition position, int durationInSeconds) throws AcanoApiException;
 
     String addCoSpaceMember(String coSpaceId, String userJid) throws AcanoApiException;
@@ -90,6 +92,7 @@ public interface AcanoClient {
 
     void deleteCallLegProfile(String callLegProfileId) throws AcanoApiException;
 
+    List<Call> listCalls(String coSpaceId) throws AcanoApiException;
 
     List<CallLeg> listCallLegs(String callId) throws AcanoApiException;
 
