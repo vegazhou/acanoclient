@@ -85,6 +85,7 @@ public class CallLeg extends AcanoObject {
     private boolean videoEnabled;
     private int durationSeconds;
     private String type;
+    private String subType;
     private Configuration configuration;
     private Status status;
 
@@ -109,6 +110,7 @@ public class CallLeg extends AcanoObject {
         name = readTextValue(bodyNode.selectSingleNode("name"));
         remoteParty = readTextValue(bodyNode.selectSingleNode("remoteParty"));
         type = readTextValue(bodyNode.selectSingleNode("type"));
+        subType = readTextValue(bodyNode.selectSingleNode("subType"));
         presentationContributionAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/presentationContributionAllowed"));
         presentationViewingAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/presentationViewingAllowed"));
         muteOthersAllowed = readBooleanValue(bodyNode.selectSingleNode("configuration/muteOthersAllowed"));
@@ -253,6 +255,10 @@ public class CallLeg extends AcanoObject {
 
     public String getType() {
         return type;
+    }
+
+    public String getSubType() {
+        return subType;
     }
 
     public int getDurationSeconds() {

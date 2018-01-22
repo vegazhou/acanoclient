@@ -275,6 +275,10 @@ public class StandardAcanoClient implements AcanoClient {
 
     @Override
     public String createCall(String coSpaceId, int participantLimit) throws AcanoApiException {
+        List<Call> calls = listCalls(coSpaceId);
+        if (calls != null && calls.size() > 0) {
+            return calls.get(0).getId();
+        }
         Call call = new Call();
         call.setCoSpace(coSpaceId);
         call.setMaxCallLegs(participantLimit);
